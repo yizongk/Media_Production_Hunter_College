@@ -2,30 +2,9 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- https://www.w3schools.com/howto/howto_js_slideshow.asp -->
 
-    <style>
-      body {font-family: Verdana, sans-serif;}
-      .mySlides {display: none;}
-      img {vertical-align: middle;}
-
-      /* Slideshow container */
-      .slideshow-container {
-        width: 100%;
-        margin: auto;
-      }
-
-      /* Fading animation */
-      .fade {
-        animation-name: fade;
-        animation-duration: 1.5s;
-      }
-
-      @keyframes fade {
-        from {opacity: .4}
-        to {opacity: 1}
-      }
-    </style>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="slideshow.css">
 
     <!-- Navigation -->
     <nav>
@@ -85,34 +64,6 @@
 
     </div>
 
-    <script>
-        // create variable to index the slides - to track
-      var slideIndex = 0;
-        // call a function that does something with the slides
-      showSlides();
-
-      function showSlides() {
-          // a variable to be used with the for loop
-        var i;
-          // target the slides in the DOM as slides
-        var slides = document.getElementsByClassName("mySlides");
-          // loop through the slides showing them one at a time (display)
-        for (i = 0; i < slides.length; i++) {
-          console.log(`forloop ran with i ${i} slides.length ${slides.length}`);
-          slides[i].style.display = "none";  // Make it go away on browser so images doesn't become a scroll down list of images.
-        }
-          // increment the slides from 0 to the total number of slides (for loop)
-        console.log(`slideIndex: ${slideIndex} slides.length: ${slides.length}`);
-        slideIndex++;
-          // loop back to the beginning
-        if (slideIndex > slides.length) {slideIndex = 1}
-    
-          // Sets the previous img in the array to be shown in block format.
-        slides[slideIndex-1].style.display = "block";
-        console.log("This ran");
-        setTimeout(showSlides, 2000); // Change image every 2 seconds, call it self recursively
-      }
-    </script>
-
+    <script type="text/javascript" src="slideshow.js"></script>
   </body>
 </html>
