@@ -7,80 +7,14 @@
 		<meta name="description" content="Home page for Web Production 1">
 		<meta name="author" content="Yi Zong Kuang">
 
-		<style type="text/css">
-			body {
-				font-family: Helvetica, sans-serif;
-			}
-			nav {
-				position: fixed;
-				top: 0px;
-				left: 0px;
-				width: 100%;
-				color: #fffff;
-				background-color: rgba(0,0,0,0.8);
-				padding: 0px;
-				height: 2.5em;
-				z=index: 100;
-			}
-			nav a {
-				text-decoration: none;
-				color: white;
-			}
-			nav ul {
-				list-style-type: none;
-			}
-			nav ul li {
-				display: inline;
-				margin-top: 0;
-				padding-top: 0;
-				padding-left: 10px;
-				padding-right: 10px;
-				border-right: 1px dotted #999;
+		<link rel="stylesheet" href="index.css">
 
-			}
-			nav ul li:last-child {
-				border-right: none;
-			}
-			nav a:hover {
-				color: red;
-			}
-			#entertainment {
-				width: 100%;
-				height: 100%;
-			}
-
-			/* CSS Dropdown Nav Elements */
-			.dropdown {
-				cursor: pointer;
-				position: relative;
-				display: inline-block;
-			}
-
-			/* hide dropdown content by default */
-			.dropdown-content {
-				display: none; /* none hides the content */
-				position: absolute;
-				max-width: 100em;
-				background-color: #999;
-				box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.9);
-				z-index: 110;
-			}
-
-			/* style links inside the dropdown */
-			.dropdown-content a {
-				background-color: rgba(0,0,0,0.8);
-				color: white;
-				padding: .5em 2em .5em 1em;
-				text-decoration: none;
-				border-bottom: 1px solid gray;
-				display: block;
-			}
-
-			/* show the dropdown on hover */
-			.dropdown:hover .dropdown-content {
-				display: block;
-			}
-		</style>
+		<picture>
+			<source media="(min-width: 1280px)" src="img/happy-music-1280w.jpg">
+			<source media="(min-width: 960px)" src="img/happy-music-960w.jpg">
+			<source media="(min-width: 480px)" src="img/happy-music-480w.jpg">
+			<img src="img/happy-music-1280w.jpg" alt="Happy face header image for front page of medp285" style="width:auto">
+		</picture>
 	</head>
 
 	<body>
@@ -88,23 +22,17 @@
 		<nav>
 			<ul>
 				<li><a href="../index.html">Home</a></li>
-<<<<<<< HEAD
-				<li><a href="index.html">Medp285 Home</a></li>
         		<li class="dropdown"><a href="projects.html">Projects</a>
         			<div class="dropdown-content">
         				<a href="slideshow.html" target="_blank">Slideshow</a>
         				<a href="videoPage.html" target="_blank">Video</a>
-        				<a href="responsiveIMG.html" target="_blank">Responsive Image</a>
+						<a href="responsiveimg.html" target="_blank">Responsive Image</a>
+						<a href="typography.html"target="_blank">CSS Typography: Text, Color, Float</a>
         			</div>
         		</li>
-        		<li><a href="https://yizongk.wordpress.com/">Blog</a></li>
-=======
-        		<li><a href="projects.html">Projects</a></li>
         		<li><a href="https://yizongk.wordpress.com/" target="_blank">Blog</a></li>
->>>>>>> 32c2a0b1241b74798b2e5d50468bc301e29e2a16
 			</ul>
-			<p>Main page of Medp285 Web Production</p>
-			<hr>
+			<h1>Main page of Medp285 Web Production</h1>
 		</nav>
 
 		<!-- About -->
