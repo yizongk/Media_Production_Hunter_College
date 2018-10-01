@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    /* read - https://www.w3schools.com/Css/css3_box-sizing.asp */
+}
+
+/* CSS GRID Layout */
+
+body {
+  font-family: Verdana, sans-serif;
+  display: grid;
+  /* css units: https://www.w3schools.com/cssref/css_units.asp */
+  /* vh - view height; vw - view width */
+  min-width: auto;
+  min-height: 100vh;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-columns: 1fr 4fr 1fr;
+  margin: 0;
+}
+header {
+  grid-row: 1;
+  /* the numbers below represent the starting track and ending track
+    starting track / ending track */
+  grid-column: 1 / 4;
+  border: 1px solid;
+  background: linear-gradient(red, yellow);
+  font-family: 'Lobster Two', cursive; /* linked Google Font */
+  margin: 0;
+  padding: 1em;
+}
+nav {
+  grid-row: 2;
+  grid-column: 1 / 2;
+  padding: 0 10px;
+  border: 1px solid;
+  background: linear-gradient(to bottom, rgba(100,100,100,1), rgba(255,255,255,1));
+}
+main {
+  grid-row: 2;
+  grid-column: 2 / 3;
+  padding: 0 20px;
+  border: 1px solid;
+  background-color: blue;
+  padding-bottom: 10%;
+}
+aside {
+  grid-row: 2;
+  grid-column: 3 / 4;
+  padding: 0 10px;
+  border: 1px solid;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /*
+  grid-row: 3;
+  grid-column: 1 / 4;
+  border: 1px solid;
+  */
+  background-color: #333;
+  color: white;
+  padding: 20px;
+}
+p { line-height: 1.5em; }

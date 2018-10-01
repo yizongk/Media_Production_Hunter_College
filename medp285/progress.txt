@@ -1,0 +1,10 @@
+1. Create a master css style sheet for all html in medp285
+	-> only the assignment branches off from this philosophy where they have their own style.
+2. Clean up useless files.
+3. Download all class example and put them in the correct folder with date and title
+4. Revise previous assignment and make them look good with proper passage and image.
+5. Change img to Image and change all source code to reflect that.
+6. Change name of project.html to assigemtn.html and make sure all source code reflect that.
+
+
+
