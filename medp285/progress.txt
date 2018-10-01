@@ -5,6 +5,7 @@
 4. Revise previous assignment and make them look good with proper passage and image.
 5. Change img to Image and change all source code to reflect that.
 6. Change name of project.html to assigemtn.html and make sure all source code reflect that.
+7. Use Grid for CSS for ease of coding and imagining.
 
 
 
