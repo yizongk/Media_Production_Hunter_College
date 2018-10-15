@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+#main {
+  border: 2px solid #000;
+  margin: 1em;
+  /*float: left;*/
+  /*display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-shrink: 1;*/
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.gallery {
+    border: 1px solid #ccc;
+    /*width: 25%;
+    float: inherit;*/
+}
+
+.gallery:hover {
+    border: 1px solid #777;
+}
+
+.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+/*
+The @media rule is used in media queries to apply different styles for different media types/devices. Media queries can check for:
+width and height of the viewport
+width and height of the device
+orientation (is the tablet/phone in landscape or portrait mode?)
+resolution
+
+Keywords are:
+not
+only (no effect on modern browsers)
+and
+They are optional. However, if you use not or only, you must also specify a media type.
+*/
+
+/* if the viewport has a max width of 800px, present only two divs in a row */
+@media only screen and (max-width: 800px) {
+    .gallery {
+        width: 50%;
+        background-color: red;
+    }
+}
+
+/* if the viewport has a max width of 500px, present only one div per row */
+@media only screen and (max-width: 500px) {
+    .gallery {
+        width: 100%;
+        background-color: green;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+  <h1>Responsive Image Gallery</h1>
+  <h2>Resize the browser window to see the effect.</h2>
+
+<div id="main">
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+  <div class="gallery">
+    <a target="_blank" href="img/twitter.png">
+      <img src="img/twitter.png" alt="No More Tweets">
+    </a>
+    <div class="desc">Add a description of the image here</div>
+  </div>
+
+</div>
+
+<div style="clear:both">
+  <p>This example use media queries to re-arrange the images on different screen sizes: for screens larger than 700px wide, it will show four images side by side, for screens smaller than 700px, it will show two images side by side. For screens smaller than 500px, the images will stack vertically (100%).</p>
+  <p><a href="https://www.w3schools.com/css/css_image_gallery.asp" target="_blank">W3Schools CSS Tutorial</a></p>
+</div>
+
+</body>
+</html>

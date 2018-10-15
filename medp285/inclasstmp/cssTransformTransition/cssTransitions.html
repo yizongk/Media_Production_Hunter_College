@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CSS3 Transitions</title>
+	<style type="text/css">
+	#box01 {
+	  	width: 200px;
+	    height: 200px;
+		border: 1px solid;
+	  	margin:auto;
+	  	margin-top: 50px;
+	  	background-color: red;
+	  }
+	  #box01 { 
+	  	width: 100px;
+        height: 100px;
+        background: red;
+        -webkit-transition: width 2s; /* Safari */
+        transition: width 2s;
+      }
+      #box01:hover { 
+      	width: 400px;
+      }
+	</style>
+</head>
+<body>
+  <h1>CSS3 Transitions</h1>
+  <p>CSS3 transitions allows you to change property values smoothly (from one value to another), over a given duration.  Two steps:
+    <ol>
+      <li>In your rules list the CSS property that you want to add an effect to</li>
+      <li>Use the transition property and the duration of the effect for the value</li>
+    </ol>
+  </p>
+  <div id="box01">HELLO</div>
+</body>
+</html>
