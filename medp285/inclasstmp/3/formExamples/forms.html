@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>
+			A Non Working Form
+			</title>
+			<meta charset="utf-8">
+		<style>
+			#userData{width:600px}
+		</style>
+
+		</head>
+
+<body>
+
+<form action="process.php" method="post" id="userData">
+
+	<fieldset>
+			<legend> Grabbing Your Personal Data </legend>
+
+			<p>
+				<lable for="name">NAME:</lable>
+				<input type="text" name="name" id="name" placeholder="Name" required>
+			</p>
+
+			<p>
+				Email: <input type="email" placeholder="Email" name="email">
+			</p>
+
+			<p>
+				Profile Pic: <input type="file" name="photo">
+			</p>
+			<p>
+				Calendar: <input type="date" name="availability" size="30">
+			</p>
+			<p>
+				Discipline of Interest:
+				<ul>
+					<li><lable>
+						<input type="checkbox" name="discipline" value="designer"> Graphic Designer </lable></li>
+
+					<li><lable>
+						<input type="checkbox" name="discipline" value="film"> Film </lable></li>
+
+					<li><lable>
+						<input type="checkbox" name="discipline" value="media"> Media </lable></li>
+					</ul>
+			</p>
+	</fieldset>
+</form>
+
+</body>
+
+	</html>
