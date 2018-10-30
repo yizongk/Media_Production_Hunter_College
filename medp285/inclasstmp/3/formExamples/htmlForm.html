@@ -1,0 +1,171 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Creating an accessible form" />
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="formStyling.css" />
+  </head>
+
+  <body>
+    <div id="container">
+    <h3>
+  Hello, the following information is required from our users:
+    </h3>
+    <!-- "get" is used when there is no sensitive information as it is visible in the url
+    "get" is for small amounts of data and is the default method.
+    "post" may include sensitive information as it's not visible in the url -->
+    <form method="post" action="register.php" id="formContainer" oninput="x.value=parseInt(a.value)+parseInt(b.value)">
+      <fieldset> <!--Used to logically group sections of a form-->
+        <legend>Name and Contact</legend> <!--Used to add captions to a fieldset-->
+        <ol>
+          <li>
+        <label for="firstname">First Name:<em>*</em>
+        <input type="text" placeholder="First Name" name="firstname" size="25" maxlength="100" autofucus required>
+      </label>
+      </li>
+      <li>
+        <label for="middlename">Middle Name:<em>*</em>
+        <input type="text" placeholder="Middle Name" name="middlename" size="25" maxlength="100" disabled></label>
+      </li>
+      <li>
+        <label for="lastname">Last Name:<em>*</em>
+        <input type="text" placeholder="Last Name" name="lastname" size="25" maxlength="100"></label>
+      </li>
+      <li>
+        <label for="email">Email:<em>*</em>
+        <input placeholder="Submit Email" type="email" name="email" required></label>
+      </li>
+      <li>
+        <label for="url">URL:
+        <input type="url" placeholder="Your Web Site" name="url"></label>
+        </li>
+      </ol>
+      </fieldset>
+
+      <fieldset>
+        <legend>Calendar (month):</legend>
+        <input name="contactDate" type="month" size="30">
+      </fieldset>
+
+      <fieldset>
+        <legend>Professional Discipline:</legend>
+        <!-- Checkboxes let a user select ZERO or MORE options of a limited number of choices. -->
+        <ul>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Art"> Art
+          </label></li>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Activist"> Activist
+          </label></li>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Film Maker"> Film Maker
+          </label></li>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Writer"> Writer
+          </label></li>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Graphic Designer"> Graphic Designer
+          </label></li>
+          <li><label>
+          <input type="checkbox" name="discipline" value="Trouble Maker"> Trouble Maker
+          </label></li>
+        </ul>
+      </fieldset>
+
+      <fieldset>
+        <legend>Gender and Age: </legend>
+        <!-- Radio buttons let a user select ONLY ONE of a limited number of choices -->
+        <ul>
+          <li><label>
+          <input type="radio" name="gender" value="female"> Female
+          </label></li>
+          <li><label>
+          <input type="radio" name="gender" value="male"> Male
+          </label></li>
+          <li><label>
+          <input type="radio" name="gender" value="other"> Other
+          </label></li>
+          <li><label>
+          <input type="radio" name="gender" value="Prefer not to say"> Prefer not to say
+          </label></li>
+          <li>
+          <label for="dob">Year of Birth:
+          <select id="dob">
+          <option value="1977">1977</option>
+          <option value="1978">1978</option>
+          <option value="1979">1979</option>
+          <option value="1980">1980</option>
+          <option value="1981">1981</option>
+          <option value="1982">1982</option>
+          <option value="1983">1983</option>
+          <option value="1984">1984</option>
+          <option value="1985">1985</option>
+          <option value="1986">1986</option>
+          <option value="1987">1987</option>
+          <option value="1988">1988</option>
+          <option value="1989">1989</option>
+          <option value="1990">1990</option>
+          <option value="1991">1991</option>
+          <option value="1992">1992</option>
+          <option value="1993">1993</option>
+          <option value="1994">1994</option>
+          </select>
+          </label>
+          </li>
+        </ul>
+      </fieldset>
+
+      <fieldset>
+        <datalist id="mylist">
+        <option label="google" value="http://google.com"></option>
+        <option label="yahoo" value="http://yahoo.com"></option>
+        <option label="bing" value="http://bing.com"></option>
+        </datalist>
+        <label>How did you hear about us? </label><br />
+        <input name="howDidYouHear" type="uri" list="mylist">
+      </fieldset>
+
+      <fieldset>
+        <legend> Please describe your career interests: </legend>
+        <textarea name="response" rows="5" cols="40">
+        </textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>What is your favorite color?</legend>
+        <input type="color" name="favcolor" value="favcolor">
+      </fieldset>
+
+      <fieldset>
+        <legend>
+         Please describe your level of excitement: </legend>
+        0
+        <input type="range" id="a" name="a" value="50">
+        100 +
+        <input type="number" id="b" name="b" value="50">
+        =
+        <!-- output element represents the result of a calculation -->
+        <output name="x" for="a b"></output>
+      </fieldset>
+
+      <fieldset>
+        <legend> Encryption using HTML5 keygen: </legend>
+        <input type="text" name="user">
+        <br><br>
+        Encryption:
+        <br>
+        <keygen name="security" value="security">
+      </fieldset>
+
+      <p>
+        <input type="submit" value="Send It!" />
+        <input type="reset" />
+      </p>
+    </form>
+
+    </div>
+  </body>
+</html>
