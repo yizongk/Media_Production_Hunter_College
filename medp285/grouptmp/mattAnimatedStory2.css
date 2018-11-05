@@ -1,0 +1,273 @@
+body{
+	background-color: black;
+	text-align: center;
+}
+
+/*// Animations //*/
+
+@keyframes Rise {
+	from{ transform: translateY(0px) rotate(0deg) scale(0);
+	opacity:0;}
+	95%{
+		opacity:1;
+	}
+	to{ transform: translateY(300px) rotate(720deg) scale(5);}
+	100%{
+		opacity:0;
+	}
+}
+@keyframes Zoominleft{
+	from{transform:translateX(0px) translateY(-300px) scale(0);}
+	95%{
+		opacity:1;
+	}
+	to{transform: translateX(-500px) translateY(50px) scale(1); opacity:0;}
+}
+
+@keyframes Zoominright{
+	from{transform:translate(0px) translateY(-500px) scale(0);}
+	95%{
+		opacity:1;
+	}
+	to{transform: translateX(500px) translateY(-400px) scale(1);opacity:0;}
+}
+
+@keyframes Zoominrightup{
+	from{transform:translateX(0px) translateY(50px) scale(0);}
+	95%{
+		opacity:1;
+	}
+	to{transform: translateX(500px) translateY(0px) scale(1);opacity:0;}
+}
+@keyframes Zoomincenter {
+	 0% {
+	opacity:0;
+    transform: scale(1);
+  }
+  45%{
+	  opacity:1;
+  }
+  100% {
+	  opacity:0;
+    transform: scale(2);
+  }
+}
+
+/*// Elements //*/
+#first{
+	position:absolute;
+	top:0;
+	left:40%;
+}
+#second{
+	position:absolute;
+	top:50%;
+	left:40%;
+}
+#third{
+	position:absolute;
+	top:25%;
+	left:40%;
+}
+#fourth{
+	position:absolute;
+	top:55%;
+	left:40%;
+}
+#fifth{
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+.SF{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoomincenter;
+	animation-duration:8s;
+	animation-delay:2s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.teeth{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominleft;
+	animation-delay:3s;
+	animation-duration:8s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Alien{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominleft;
+	animation-delay:25s;
+	animation-duration:11s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Animals1{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominright;
+	animation-delay:23s;
+	animation-duration:15s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Animals2{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoomincenter;
+	animation-delay:24s;
+	animation-duration:13s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.clock{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominright;
+	animation-delay:4s;
+	animation-duration:8s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.rocket{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominrightup;
+	animation-delay:6s;
+	animation-duration:15s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.UFO{
+	top:0;
+	width: 20%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominleft;
+	animation-delay:20s;
+	animation-duration:12s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Starwars{
+	top:50px;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoomincenter;
+	animation-delay:50s;
+	animation-duration:14s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.Sol{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominrightup;
+	animation-delay:62s;
+	animation-duration:16s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Darkstar1{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoomincenter;
+	animation-delay:63s;
+	animation-duration:13s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.Darkstar2{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Zoominleft;
+	animation-delay:64s;
+	animation-duration:15s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.planet{
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Rise;
+	animation-duration:20s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.planet2{
+	position:absolute;
+	top:0;
+	left:30%;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Rise;
+	animation-delay:21s;
+	animation-duration:20s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+	
+}
+.planet3{
+	position:absolute;
+	top:0;
+	left:25%;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Rise;
+	animation-delay:41s;
+	animation-duration:20s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+.planet4{
+	position:absolute;
+	top:0;
+	left:10%;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	opacity:0;
+	animation-name: Rise;
+	animation-delay:61s;
+	animation-duration:20s;
+	animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+

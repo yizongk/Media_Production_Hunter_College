@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Madlibs</title>
+    <meta name="viewport" content="width=device-width">
+
+    <noscript>
+      <div>
+        This page requires JavaScipt.
+      </div>
+    </noscript>
+
+    <script type="text/javascript">
+      function makeLibs() {
+        story="<h2>Migrations</h2><p>In " + document.madlibs.input1.value + ", " + " a child name " + document.madlibs.input2.value + " " + document.madlibs.input3.value + " to a new land and had to build a " + document.madlibs.input4.value + " for shelter.</p>";
+
+        //now lets write the story to a div
+        document.getElementById("writeLib").innerHTML=story;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="main">
+      <form name="madlibs" id="storyForm">
+        <fieldset> <!--Used to logically group sections of a form-->
+
+          <legend>Help Generate a Story</legend> <!--Used to add captions to a fieldset-->
+          <ul>
+          <li>
+          <label for="year">Select a year:<em>*</em> <select name="input1" required> <option value="1998">1998</option> <option selected="selected" value="1999">1999</option> <option value="2000">2000</option> <option value="2001">2001</option> </select></label>
+          </li>
+          <li>
+          <label for="firstname">First Name:<em>*</em> <input type="text" name="input2" placeholder="First Name" size="30" required /></label>
+          </li>
+          <li>
+          <label for="verb">Past Tense Verb:<em>*</em> <input type="text" name="input3" placeholder="Verb" size="30" required /></label>
+          </li>
+          <li>
+          <label for="shelter">A shelter:<em>*</em> <input type="text" name="input4" placeholder="A Shelter" size="30" required /></label>
+          </li>
+          </ul>
+        </fieldset>
+
+        <p>
+        <!-- This button runs the function that compiles the story -->
+        <input type="button" value="Create Story" onClick="makeLibs()">
+        <input type="reset" />
+      </p>
+    </form>
+
+
+      <div id="writeLib"></div>
+    </div>
+
+  </body>
+</html>
