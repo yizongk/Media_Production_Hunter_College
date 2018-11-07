@@ -1,4 +1,4 @@
-<?xml-stylesheet type="text/css" href="../animation.css" ?>
+<?xml-stylesheet type="text/css" href="../overallAnimation.css" ?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="210mm" height="297mm" viewBox="0 0 210 297"><defs><linearGradient id="a"><stop offset="0" stop-color="#72bac3"/>
 <stop offset="1"/>
 </linearGradient><radialGradient xlink:href="#a" id="c" cx="-42.34" cy="114.047" fx="-42.34" fy="114.047" r="104.132" gradientTransform="matrix(.03199 -4.95586 1.97857 .03753 -117.28 299.164)" gradientUnits="userSpaceOnUse"/>
