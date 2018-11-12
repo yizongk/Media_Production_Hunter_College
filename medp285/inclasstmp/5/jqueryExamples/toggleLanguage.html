@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Realidad VE</title>
+    </head>
+
+  <body>
+
+    <a href="#" id="link"></a></div>
+      <div id="a">
+      <p>
+      Realidad VE is a virtual reality application that collapses documentary material with a virtual space.  Jose Bergher - internationally recognized Venezuelan musician and former director of the National Symphony - discusses the history leading to the current political and economic instability of Venezuela.  The video interview with Bergher is juxtaposed against a virtual space populated by frantic citizens, a man and woman in heated discussion, a boy sitting against a tree observing the environment around him, soldiers at ease in conversation and paramilitary troops guarding the perimeter. The blank landscape only contains dead trees and abandoned drilling rigs while the citizenry scatter throughout the landscape. Above this world, a video portrait of Bergher is projected into space and the user listens to Bergher’s analysis of Venezuela’s current political and economic situation as she walks through the virtual environment.
+      </p>
+  </div>
+  <div id="b">
+      <p>
+Realidad VE es una aplicación de realidad virtual que combina material documental con un espacio virtual. José Bergher - retirado músico venezolano y director de la Venezuela Sinfónica Nacional  discute la historia en relación a la actual inestabilidad económica y política  de Venezuela. La entrevista en video con Bergher se yuxtapone a un espacio virtual poblado por ciudadanos frenéticos, un hombre y una mujer en discusión, un niño sentado frente a un árbol observando el entorno a su alrededor, soldados conversando y tropas paramilitares protegiendo el perímetro. El paisaje en blanco solo contiene árboles muertos y plataformas de perforación abandonadas mientras la ciudadanía se dispersa por todo el espacio. Sobre este mundo, un video retrato de Bergher se proyecta y el usuario escucha el análisis de Bergher de la situación política e económica actual de Venezuela mientras recorre el entorno virtual.
+</p>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    //Spanish to English toggle
+    $(document).ready(function() {
+
+    var $divA = $('#a');//English
+    var $divB = $('#b');//Spanish
+    var $link = $('#link');//toggel text
+
+  // Initialize everything
+  $link.text( 'English' );
+  $divA.hide();
+
+  $link.click(function(){
+
+  // If A is visible when the link is clicked
+  // you need to hide A and show B and change the link text
+  if( $divA.is( ':visible' ) ){
+    $link.text( 'English' );
+    $divA.hide();
+    $divB.fadeIn();
+  } else {
+    $link.text( 'Español' );
+    $divA.fadeIn();
+    $divB.hide();
+  }
+
+  return false;
+  });
+
+  });
+
+    </script>
+
+</body>
+</html>

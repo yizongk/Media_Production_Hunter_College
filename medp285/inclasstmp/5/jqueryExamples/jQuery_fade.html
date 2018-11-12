@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>fadeIn demo</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- http://api.jquery.com/
+  http://api.jquery.com/fadeIn/ -->
+  <style>
+  p {
+    font-family: sans-serif;
+    padding-bottom: 20px;}
+  #one {
+    position: relative;
+    padding-top: 5%;
+    width: 400px;
+    margin: auto;
+    display: none;
+  }
+  #two {
+    position: relative;
+    width: 400px;
+    margin: auto;
+    display: none;
+  }
+  #three {
+    position: relative;
+    width: 400px;
+    margin: auto;
+    display: none;
+  }
+  </style>
+  
+</head>
+<body>
+
+  <p id="one">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a pharetra erat, sed dignissim quam. Nunc sollicitudin, odio et pretium molestie, dui sem hendrerit tellus, id congue turpis nulla ac diam. Nullam auctor congue rhoncus. Donec nunc justo, faucibus vitae egestas ullamcorper, convallis ut quam. Sed lacinia, enim in pharetra interdum, odio mauris convallis quam, eget mattis diam nunc ac tellus.
+  </p>
+  <p id="two">
+  Nam quis eros a ipsum consectetur imperdiet. Aliquam nec ligula vel erat finibus hendrerit vitae a est. Nunc sollicitudin turpis vitae nulla finibus, et tincidunt eros lacinia. Integer suscipit laoreet felis a dignissim. Fusce tempus, lacus ac blandit consectetur, libero justo faucibus ex, sed euismod massa quam quis neque.
+  </p>
+  <p id="three">
+  Praesent lacinia arcu sollicitudin eros gravida congue. Aliquam cursus mollis nulla, eget venenatis augue gravida non. Praesent facilisis luctus nisl ut mattis. Suspendisse suscipit justo quis purus pulvinar blandit. Aliquam imperdiet urna at purus convallis, ornare semper lorem suscipit. In fringilla rutrum orci vitae gravida. Donec sed lorem euismod, tempor purus at, aliquam nisi.
+  </p>
+
+  <script>
+  	$(document).ready( function() {
+  		$("#one").fadeIn(2000);
+  		$("#two").fadeIn(4000);
+  		$("#three").fadeIn(6000);
+  	} );
+  </script>
+
+</body>
+</html>
