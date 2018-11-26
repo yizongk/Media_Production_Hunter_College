@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+	<title>Video Background Page</title>
+	<style>
+	body
+	{
+		margin:0;
+		padding:0;
+		text-align:center;
+		font-family:arial;
+		font-size:12px;
+		color:#fff;
+	}
+
+	#main
+	{
+		padding:3em 2em;
+		background-color:#333;
+		position:absolute;
+		top:50%;
+		left:50%;
+		margin-top:-150px;
+		margin-left:-150px;
+		width:340px;
+		height:140px;
+		-moz-opacity: 0.80;
+		-khtml-opacity: 0.80;
+		opacity: 0.80;
+		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=80);
+		filter: progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+		filter:alpha(opacity=80);
+	}
+
+	form
+	{
+		margin:2em 0;
+	}
+
+	h2
+	{
+		margin:0;
+		padding:0;
+		font-size:1.6em;
+	}
+
+	a:link,a:visited
+	{
+		color:#fff;
+		text-decoration:underline;
+	}
+
+	small a:link
+	{
+		text-decoration:none;
+	}
+
+	small a:link
+	{
+		text-decoration:none;
+	}
+	</style>
+</head>
+<body>
+	<div style="position: fixed; z-index: -99; width: 100%; height: 100%">
+		<!-- toggle: autoplay, controls, loop (not working), rel (shows related videos), showinfo (title, rate...) -->
+		<iframe frameborder="0" height="100%" width="100%" src="https://www.youtube.com/embed/cbTBACN1rFw?autoplay=1&controls=0&loop=1&rel=0&showinfo=1&autohide=0&wmode=transparent&hd=1"></iframe>
+	</div>
+	<div id="main">
+		<h2>
+			Video Background
+		</h2>
+		<p>
+			This page background contains a YouTube video. View source or <a href="http://www.labnol.org/internet/youtube-video-background/27933/">see tutorial</a> on how to embed video backgrounds.
+		</p>
+	</div>
+</body>
+</html>

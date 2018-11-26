@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>YouTube API FullScreen Video</title>
+    <!-- Page that explains the entire API:
+    https://developers.google.com/youtube/iframe_api_reference -->
+    <style>
+      .bgyt {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto; height: auto;
+        background: url(img/indexVideo.jpg) no-repeat;
+        background-size: cover;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div id="ytplayer" class="bgyt"></div>
+
+  <script>
+  // https://developers.google.com/youtube/iframe_api_reference
+  // Load the IFrame Player API code asynchronously.
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/player_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  // Replace the 'ytplayer' element with an <iframe> and
+  // YouTube player after the API code downloads.
+  var player;
+  function onYouTubePlayerAPIReady() {
+    player = new YT.Player('ytplayer', {
+      // ytplayer does not allow fullscreen video, therefore css work around - .bgyt
+      //height: '720',
+      //width: '1080',
+      videoId: 'iz2ETh_OzxE',
+      playerVars: { //Player Parameters
+        // https://developers.google.com/youtube/player_parameters?playerVersion=HTML5
+        autoplay: 1,
+        controls: 0, // 2 - faster performance, does not allow Flash player to initialize, 0 hides, 1 shows
+        autohide: 1, //hides player bar
+        modestbranding: 1,
+        rel: 0 // turns off grid of related videos at end of playback
+      }
+    });
+  }
+  </script>
+</body>
