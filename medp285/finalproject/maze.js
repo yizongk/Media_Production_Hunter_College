@@ -157,7 +157,7 @@ class game {
 	validMove(direction, x, y) {	// @arg: string, int, int
 		if(direction == "up") {
 			//top lane
-			if( x == 0 ) {
+			if( x <= 0 ) {
 				return false;
 			}
 			if( this.map[x-1][y] != "*" ) {
@@ -166,7 +166,7 @@ class game {
 		}
 		if(direction == "down") {
 			//bot lane
-			if( x == (this.map.dimensionX - 1) ) {
+			if( x >= (this.map.dimensionX - 1) ) {
 				return false;
 			}
 			if( this.map[x+1][y] != "*" ) {
@@ -175,7 +175,7 @@ class game {
 		}
 		if(direction == "left") {
 			//left lane
-			if( y == 0 ) {
+			if( y <= 0 ) {
 				return false;
 			}
 			if( this.map[x][y-1] != "*" ) {
@@ -184,7 +184,7 @@ class game {
 		}
 		if(direction == "right") {
 			//right lane	
-			if( y == (this.map.dimensionY - 1) ) {
+			if( y >= (this.map.dimensionY - 1) ) {
 				return false;
 			}
 			if( this.map[x][y+1] != "*" ) {
@@ -192,49 +192,65 @@ class game {
 			}
 		}
 
-		return true;
+		if( direction == "up" || direction == "down" || direction == "left" || direction == "right" ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	whichPlayer() {		// for now returns the last player in the playerArr.
-		return this.playerArr[this.playerCount];
+		return this.playerArr[this.playerCount - 1];
 	}
 
-	getMove() {
+	keyPressEventHandler(event) {
 		var input;
-		//wait for input
-		$("html").keypress( function() {
-			if(which == 38) {
+		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
+			if(event == 38) {
 				input = "up";
 			}
-			if(which == 40) {
+			if(event == 40) {
 				input = "down";
 			}
-			if(which == 37) {
+			if(event == 37) {
 				input = "left";
 			}
-			if(which == 39) {
+			if(event == 39) {
 				input = "right";
 			}
-		} );
-		
-		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
-		if( this.validMove(input) ) {
-			//update player coor, no need to update map coor, since they are parsed separately
-			if( input == "up" ) {
-				player.moveUp();
+			console.log("keydown()")
+	
+			var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
+			if( this.validMove( input, player.posX, player.posY ) ) {
+				//update player coor, no need to update map coor, since they are parsed separately
+				if( input == "up" ) {
+					player.moveUp();
+				}
+				if( input == "down" ) {
+					player.moveDown();
+				}
+				if( input == "left" ) {
+					player.moveLeft();
+				}
+				if( input == "right" ) {
+					player.moveRight();
+				}
+				console.log("player move event");
+			} else {
+				console.log("Invalid Move");
 			}
-			if( input == "down" ) {
-				player.moveDown();
-			}
-			if( input == "left" ) {
-				player.moveLeft();
-			}
-			if( input == "right" ) {
-				player.moveRight();
-			}
-		} else {
-			console.log("Invalid Move");
+		} else {		// Text box event handling
+			console.log("text event");
 		}
+	}
+
+	getMove() {		
+		//wait for input
+		$("html").keydown( function(event) {
+			GAME.keyPressEventHandler(event.which);
+		} );
+
+
 	}
 }
 
@@ -253,6 +269,7 @@ GAME.setPresetMap();
 	console.log(GAME);
 	GAME.addPlayer("shuze");
 	GAME.displayPlayer();
+	GAME.getMove();
 	GAME.displayGame(); 
 	
 /* } */
