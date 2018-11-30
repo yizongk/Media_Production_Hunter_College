@@ -1,6 +1,8 @@
 /* Notes 
  * const in Javascript doesn't mean c++ const, it just mean a one time assignment. But the element in the variablec an be modified.
  * all objects(arguments and return values) are by passed by reference except for boolean and int.
+ * 
+ * Author: Yi Zong Kuang
  */
 
 /* Trivial functions */
@@ -134,10 +136,8 @@ class maze_map {
 		for( i = 0; i < this.dimensionY; ++i ) {
 			var j;
 			for( j = 0; j < this.dimensionX; ++j ) {
-				//document.write( this.map[i][j] );
 				currentContent += this.map[i][j];
 			}
-			//document.write("<br>");
 			currentContent += "<br>";
 		}
 
@@ -145,7 +145,6 @@ class maze_map {
 	}
 
 	elementMapWithPlayer(playerArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
-		// wipe html body content.
 		var currentContent = "";
 
 		var i;
@@ -161,15 +160,12 @@ class maze_map {
 				}
 
 				if( playerMark == false ) {									// Checks all players list to see where on the map to mark "x"
-					//document.write( this.map[i][j] );
 					currentContent += this.map[i][j];
 				} else {
-					//document.write("x");
 					currentContent += "x";
 				}
 				
 			}
-			//document.write("<br>");
 			currentContent += "<br>"
 		}
 		console.log("display done.");
@@ -208,7 +204,6 @@ class game {
 	addPlayer(name) {
 		if( this.playerCount < this.playerArr.length ) {
 			this.playerArr[this.playerCount] = new player(name,0,0);
-			/* this.maze.setMapElement(this.playerArr[this.playerCount].posX, this.playerArr[this.playerCount].posY, "x" ); */
 			++this.playerCount;
 		} else {
 			console.log("Max amount of players has been reached.");
@@ -219,14 +214,10 @@ class game {
 		var currentContent = "";
 
 		var i;
-		//document.write("Players:");
-		//document.write("<br>");
 		currentContent += "Players:";
 		currentContent += "<br>";
 
 		for( i = 0; i < this.playerCount; ++i ) {
-			//document.write( i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id );
-			//document.write("<br>");
 			currentContent += (i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id);
 			currentContent += "<br>";
 		}
@@ -374,7 +365,6 @@ var GG = false;
 GAME.setPresetMap();
 
 /* MAIN() */
-/* while(!GG) { */    //Why is this not working?
 $(document).ready(function() {
 	console.log(GAME);
 	GAME.addPlayer("shuze");
@@ -382,4 +372,3 @@ $(document).ready(function() {
 	GAME.displayGame(); 
 	GAME.interface();		// In a sense loops while waiting for user input
 });
-/* } */
