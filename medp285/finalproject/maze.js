@@ -16,13 +16,15 @@ class chatBox {
 	// Will be a circular array, tracking next indexing(also the start and end indexing). Will sacrafice one index to be noted as end of array.
 	constructor() {
 		this.logMaxLen = CHAT_LOG_LEN;
-		this.chatLogHistory = new Array(this.logMaxLen);
+		this.chatLogHistory = new Array(this.logMaxLen);		//Stores string
+		this.chatLogUser = new Array(this.logMaxlen);		// indices corresponds user to their chat log, ex. user[0] said chatlog[0] and so on. Store interger
 		this.LogHistoryNextInputIndex = 0;		//"end index", next spot to be inputted.
 		this.startIndex = 0;
 	}
 
-	addToLog(text) {
+	addToLog(text, user_id) {	// @arg: string int
 		this.chatLogHistory[this.LogHistoryNextInputIndex] = text;
+		this.chatLogUser[this.LogHistoryNextInputIndex] = user_id;
 		this.LogHistoryNextInputIndex = (this.LogHistoryNextInputIndex+1)%this.logMaxLen;
 		if( (this.LogHistoryNextInputIndex)%(this.logMaxLen) == this.startIndex ) {
 			this.startIndex = (this.startIndex+1)%this.logMaxLen;
@@ -34,6 +36,9 @@ class chatBox {
 		var i;
 		var log_hist = "";
 		for( i = this.startIndex; i < this.LogHistoryNextInputIndex; ++i ) {	
+			log_hist += "user id: ";
+			log_hist += this.chatLogUser[ i%this.logMaxLen ];
+			log_hist += " ->";
 			log_hist += this.chatLogHistory[ i%this.logMaxLen ];
 			log_hist += "<br>";
 			console.log("index:"+(i%this.logMaxLen));
@@ -144,7 +149,7 @@ class maze_map {
 		return currentContent;
 	}
 
-	elementMapWithPlayer(playerArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
+	elementMapWithPlayer(playerOnlineArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
 		var currentContent = "";
 
 		var i;
@@ -154,7 +159,7 @@ class maze_map {
 				var playerMark = false;
 				var subi;
 				for( subi = 0; subi < playerCount; ++subi ) {
-					if( i == playerArr[subi].posX && j == playerArr[subi].posY ) {
+					if( i == playerOnlineArr[subi].posX && j == playerOnlineArr[subi].posY ) {
 						playerMark = true;
 					}
 				}
@@ -181,7 +186,7 @@ class game {
 	constructor() {
 		this.maze = new maze_map();
 		this.playerCount = 0;
-		this.playerArr = new Array(MAX_PLAYER);
+		this.playerOnlineArr = new Array(MAX_PLAYER);
 		this.chatBox = new chatBox();
 		this.textBuffer = "";
 	}
@@ -197,13 +202,13 @@ class game {
 	displayGame() {
 		var visualData;
 		console.log("Display game with player");
-		visualData = this.maze.elementMapWithPlayer( this.playerArr, this.playerCount );
+		visualData = this.maze.elementMapWithPlayer( this.playerOnlineArr, this.playerCount );
 		document.getElementById('gameViewPort').innerHTML = visualData;
 	}
 
 	addPlayer(name) {
-		if( this.playerCount < this.playerArr.length ) {
-			this.playerArr[this.playerCount] = new player(name,0,0);
+		if( this.playerCount < this.playerOnlineArr.length ) {
+			this.playerOnlineArr[this.playerCount] = new player(name,0,0);
 			++this.playerCount;
 		} else {
 			console.log("Max amount of players has been reached.");
@@ -218,7 +223,7 @@ class game {
 		currentContent += "<br>";
 
 		for( i = 0; i < this.playerCount; ++i ) {
-			currentContent += (i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id);
+			currentContent += (i + ". " + this.playerOnlineArr[i].name + " with id: " + this.playerOnlineArr[i].id);
 			currentContent += "<br>";
 		}
 		
@@ -272,15 +277,17 @@ class game {
 		return false;
 	}
 
-	whichPlayer() {		// for now returns the last player in the playerArr.
+	/* Decider for which player is giving this script the inputs from client side. WILL IMPLEMENT IN FUTURE */
+	whichPlayer() {		// for now returns the last player in the playerOnlineArr.
 		if( this.playerCount == 0 ) {
 			console.log("whichPlayer() player count is zero");
 		}
-		return this.playerArr[this.playerCount - 1];
+		return this.playerOnlineArr[this.playerCount - 1];
 	}
 
 	keyPressEventHandler(event) {
 		var input;
+		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
 			if(event == 38) {
 				input = "up";
@@ -296,7 +303,6 @@ class game {
 			}
 			console.log("keydown()")
 	
-			var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 			if( this.validMove( input, player.posX, player.posY ) ) {
 				//update player coor, no need to update map coor, since they are parsed separately
 				if( input == "up" ) {
@@ -318,7 +324,7 @@ class game {
 		} else if( this.chatBox.validText(event) ) {		// Text box event handling
 			console.log("text event");
 			if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
-				this.chatBox.addToLog(this.textBuffer);
+				this.chatBox.addToLog(this.textBuffer, player.id);
 				this.textBuffer = "";
 				return;
 			}
