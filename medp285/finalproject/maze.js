@@ -10,6 +10,7 @@
 }
 
 /* Class */
+// Display is y is row and x is column, because x are dipslayed vertically in js for some reason.
 class player {
 	constructor(name, x, y) {	// @arg: string, int, int  
 		this.id = PLAYER_ID;
@@ -19,20 +20,21 @@ class player {
 		this.posY = y;
 	}
 
-	moveUp() {
-		++this.posY;
-	}
-	moveDown() {
-		--this.posY;
-	}
-	moveLeft() {
+	moveUp() {				// minus minus cuz 0,0 is at top left corner of the map. the Y increases going downward, while X increase going rightward.
 		--this.posX;
 	}
-	moveRight() {
+	moveDown() {
 		++this.posX;
+	}
+	moveLeft() {
+		--this.posY;
+	}
+	moveRight() {
+		++this.posY;
 	}
 }
 
+// Display is trasverse y first then x, because x are dipslayed vertically in js for some reason.
 class maze_map {
 	constructor() {
 		this.dimensionX = MAP_DIMENSION;
@@ -48,10 +50,10 @@ class maze_map {
 	// Pattern generated will be even rows are clear rows, odd rows are all wall except at one random locations.
 	setPresetMap() {
 		var x;
-		for( x = 0; x < MAP_DIMENSION; ++x ) {
+		for( x = 0; x < this.dimensionY; ++x ) {
 			var y;
 			var gate = getRandomInt(MAP_DIMENSION); 
-			for( y = 0; y < MAP_DIMENSION; ++y ) {
+			for( y = 0; y < this.dimensionX; ++y ) {
 				if( x%2 == 0 ) {		// If even rows
 					this.map[x][y] = "*";
 				} else {
@@ -67,30 +69,39 @@ class maze_map {
 
 	populate() {
 		var i;
-		for( i = 0; i < MAP_DIMENSION; ++i ) {
+		for( i = 0; i < this.dimensionY; ++i ) {
 			var j = 0;
-			for( j = 0; j < MAP_DIMENSION; ++j ) {
+			for( j = 0; j < this.dimensionX; ++j ) {
 				this.map[i][j] = "*";
 			}	
 		}
 	}
 
-	displayMap() {
+	elementMap() {
+		var currentContent = "";
+
 		var i;
-		for( i = 0; i < MAP_DIMENSION; ++i ) {
+		for( i = 0; i < this.dimensionY; ++i ) {
 			var j;
-			for( j = 0; j < MAP_DIMENSION; ++j ) {
-				document.write( this.map[i][j] );
+			for( j = 0; j < this.dimensionX; ++j ) {
+				//document.write( this.map[i][j] );
+				currentContent += this.map[i][j];
 			}
-			document.write("<br>");
+			//document.write("<br>");
+			currentContent += "<br>";
 		}
+
+		return currentContent;
 	}
 
-	displayMapWithPlayer(playerArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
+	elementMapWithPlayer(playerArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
+		// wipe html body content.
+		var currentContent = "";
+
 		var i;
-		for( i = 0; i < MAP_DIMENSION; ++i ) {
+		for( i = 0; i < this.dimensionY; ++i ) {
 			var j;
-			for( j = 0; j < MAP_DIMENSION; ++j ) {
+			for( j = 0; j < this.dimensionX; ++j ) {
 				var playerMark = false;
 				var subi;
 				for( subi = 0; subi < playerCount; ++subi ) {
@@ -100,14 +111,19 @@ class maze_map {
 				}
 
 				if( playerMark == false ) {									// Checks all players list to see where on the map to mark "x"
-					document.write( this.map[i][j] );
+					//document.write( this.map[i][j] );
+					currentContent += this.map[i][j];
 				} else {
-					document.write("x");
+					//document.write("x");
+					currentContent += "x";
 				}
 				
 			}
-			document.write("<br>");
+			//document.write("<br>");
+			currentContent += "<br>"
 		}
+		console.log("display done.");
+		return currentContent;
 	}
 
 	setMapElement(x, y, element) {	// @arg: int, int, string
@@ -117,27 +133,30 @@ class maze_map {
 
 class game {
 	constructor() {
-		this.map = new maze_map();
+		this.maze = new maze_map();
 		this.playerCount = 0;
 		this.playerArr = new Array(MAX_PLAYER);
 	}
 
 	setPresetMap() {
-		this.map.setPresetMap();
+		this.maze.setPresetMap();
 	}
 
 	displayMap() {
-		this.map.displayMap();
+		this.maze.displayMap();
 	}
 
 	displayGame() {
-		this.map.displayMapWithPlayer( this.playerArr, this.playerCount );
+		var visualData;
+		console.log("Display game with player");
+		visualData = this.maze.elementMapWithPlayer( this.playerArr, this.playerCount );
+		document.getElementById('gameViewPort').innerHTML = visualData;
 	}
 
 	addPlayer(name) {
 		if( this.playerCount < this.playerArr.length ) {
 			this.playerArr[this.playerCount] = new player(name,0,0);
-			/* this.map.setMapElement(this.playerArr[this.playerCount].posX, this.playerArr[this.playerCount].posY, "x" ); */
+			/* this.maze.setMapElement(this.playerArr[this.playerCount].posX, this.playerArr[this.playerCount].posY, "x" ); */
 			++this.playerCount;
 		} else {
 			console.log("Max amount of players has been reached.");
@@ -145,13 +164,22 @@ class game {
 	}
 
 	displayPlayer() {
+		var currentContent = "";
+
 		var i;
-		document.write("Players:");
-		document.write("<br>");
+		//document.write("Players:");
+		//document.write("<br>");
+		currentContent += "Players:";
+		currentContent += "<br>";
+
 		for( i = 0; i < this.playerCount; ++i ) {
-			document.write( i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id );
-			document.write("<br>");
+			//document.write( i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id );
+			//document.write("<br>");
+			currentContent += (i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id);
+			currentContent += "<br>";
 		}
+		
+		document.getElementById('gameViewPort').innerHTML += currentContent;
 	}
 
 	validMove(direction, x, y) {	// @arg: string, int, int
@@ -160,16 +188,16 @@ class game {
 			if( x <= 0 ) {
 				return false;
 			}
-			if( this.map[x-1][y] != "*" ) {
+			if( this.maze.map[x-1][y] != "*" ) {
 				return false;
 			}
 		}
 		if(direction == "down") {
 			//bot lane
-			if( x >= (this.map.dimensionX - 1) ) {
+			if( x >= (this.maze.dimensionX - 1) ) {
 				return false;
 			}
-			if( this.map[x+1][y] != "*" ) {
+			if( this.maze.map[x+1][y] != "*" ) {
 				return false;
 			}
 		}
@@ -178,16 +206,16 @@ class game {
 			if( y <= 0 ) {
 				return false;
 			}
-			if( this.map[x][y-1] != "*" ) {
+			if( this.maze.map[x][y-1] != "*" ) {
 				return false;
 			}
 		}
 		if(direction == "right") {
 			//right lane	
-			if( y >= (this.map.dimensionY - 1) ) {
+			if( y >= (this.maze.dimensionY - 1) ) {
 				return false;
 			}
-			if( this.map[x][y+1] != "*" ) {
+			if( this.maze.map[x][y+1] != "*" ) {
 				return false;
 			}
 		}
@@ -200,6 +228,9 @@ class game {
 	}
 
 	whichPlayer() {		// for now returns the last player in the playerArr.
+		if( this.playerCount == 0 ) {
+			console.log("whichPlayer() player count is zero");
+		}
 		return this.playerArr[this.playerCount - 1];
 	}
 
@@ -247,7 +278,9 @@ class game {
 	getMove() {		
 		//wait for input
 		$("html").keydown( function(event) {
+			console.log("keydown detected");
 			GAME.keyPressEventHandler(event.which);
+			GAME.displayGame(); 
 		} );
 
 
@@ -266,10 +299,11 @@ GAME.setPresetMap();
 
 /* MAIN() */
 /* while(!GG) { */    //Why is this not working?
+$(document).ready(function() {
 	console.log(GAME);
 	GAME.addPlayer("shuze");
 	GAME.displayPlayer();
 	GAME.getMove();
 	GAME.displayGame(); 
-	
+});
 /* } */
