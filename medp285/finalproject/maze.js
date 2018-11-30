@@ -3,13 +3,62 @@
  * all objects(arguments and return values) are by passed by reference except for boolean and int.
  */
 
- /* Trivial functions */
- // Returns a random number from 0 to max.
- function getRandomInt(max) {
+/* Trivial functions */
+// Returns a random number from 0 to max.
+function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
 }
 
 /* Class */
+class chatBox {
+	// Will be a circular array, tracking next indexing(also the start and end indexing). Will sacrafice one index to be noted as end of array.
+	constructor() {
+		this.logMaxLen = CHAT_LOG_LEN;
+		this.chatLogHistory = new Array(this.logMaxLen);
+		this.LogHistoryNextInputIndex = 0;
+	}
+
+	addToLog(text) {
+		this.chatLogHistory[this.LogHistoryNextInputIndex] = text;
+		++this.LogHistoryNextInputIndex;
+		if(this.LogHistoryNextInputIndex >= this.logMaxLen) {
+			this.LogHistoryNextInputIndex = 0;
+		}
+		document.getElementById('chatLog').innerHTML += (text + "<br>");
+	}
+
+	elementHistory() {
+		var i;
+		var log_hist = "";
+		for( i = this.LogHistoryNextInputIndex; (i%this.logMaxLen) != (this.LogHistoryNextInputIndex - 1); ++i ) {	//once i == this.logMaxLen, will roll over and start at 0.
+			if(i == this.logMaxLen) {
+				i = 0;
+			}
+			log_hist += this.chatLogHistory[i];
+		}	
+
+		return log_hist;
+	}
+
+	displayHistory() {
+		var chatData = this.elementHistory();
+		document.getElementById('chatHistory').innerHTML = chatData;
+	}
+
+	validText( event ) {	// Check if input is letter or 'backspace' (8) or 'enter' (13) or 'space' (32) and grammar points.
+		if( (event >= 48 && event <= 90) || 
+		event == 8 || 
+		event == 13 || 
+		event == 32 ||
+		(event >= 186 && event <= 192) ||
+		(event >= 219 && event <= 222) ) {
+			return true;
+		}
+
+		return false;
+	}
+}
+
 // Display is y is row and x is column, because x are dipslayed vertically in js for some reason.
 class player {
 	constructor(name, x, y) {	// @arg: string, int, int  
@@ -55,12 +104,12 @@ class maze_map {
 			var gate = getRandomInt(MAP_DIMENSION); 
 			for( y = 0; y < this.dimensionX; ++y ) {
 				if( x%2 == 0 ) {		// If even rows
-					this.map[x][y] = "*";
+					this.map[x][y] = "-";
 				} else {
 					if( y != gate ) {
-						this.map[x][y] = "-";
-					} else {
 						this.map[x][y] = "*";
+					} else {
+						this.map[x][y] = "-";
 					}
 				}
 			}
@@ -136,6 +185,8 @@ class game {
 		this.maze = new maze_map();
 		this.playerCount = 0;
 		this.playerArr = new Array(MAX_PLAYER);
+		this.chatBox = new chatBox();
+		this.textBuffer = "";
 	}
 
 	setPresetMap() {
@@ -183,12 +234,14 @@ class game {
 	}
 
 	validMove(direction, x, y) {	// @arg: string, int, int
+		var wall = "*";
+		var blank = "-";
 		if(direction == "up") {
 			//top lane
 			if( x <= 0 ) {
 				return false;
 			}
-			if( this.maze.map[x-1][y] != "*" ) {
+			if( this.maze.map[x-1][y] != blank ) {
 				return false;
 			}
 		}
@@ -197,7 +250,7 @@ class game {
 			if( x >= (this.maze.dimensionX - 1) ) {
 				return false;
 			}
-			if( this.maze.map[x+1][y] != "*" ) {
+			if( this.maze.map[x+1][y] != blank ) {
 				return false;
 			}
 		}
@@ -206,7 +259,7 @@ class game {
 			if( y <= 0 ) {
 				return false;
 			}
-			if( this.maze.map[x][y-1] != "*" ) {
+			if( this.maze.map[x][y-1] != blank ) {
 				return false;
 			}
 		}
@@ -215,7 +268,7 @@ class game {
 			if( y >= (this.maze.dimensionY - 1) ) {
 				return false;
 			}
-			if( this.maze.map[x][y+1] != "*" ) {
+			if( this.maze.map[x][y+1] != blank ) {
 				return false;
 			}
 		}
@@ -270,9 +323,23 @@ class game {
 			} else {
 				console.log("Invalid Move");
 			}
-		} else {		// Text box event handling
+		} else if( this.chatBox.validText(event) ) {		// Text box event handling
 			console.log("text event");
+			if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
+				this.chatBox.addToLog(this.textBuffer);
+				this.textBuffer = "";
+				return;
+			}
+			if(event == 8) {			// if event is 'backspace', which is value 8, will not take into textBuffer, will delete last char in textBuffer
+				this.textBuffer = this.textBuffer.substr(0, str.length-1);
+				return;
+			}
+			this.textBuffer += String.fromCharCode(event);
+		} else {
+			console.log("Non text event");
 		}
+
+		return;
 	}
 
 	getMove() {		
@@ -291,6 +358,7 @@ class game {
 var PLAYER_ID = 0;
 const MAX_PLAYER = 10;
 const MAP_DIMENSION = 10;
+const CHAT_LOG_LEN = 100;
 const GAME = new game();
 var GG = false;
 
