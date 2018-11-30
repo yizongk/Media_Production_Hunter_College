@@ -15,14 +15,15 @@ class chatBox {
 	constructor() {
 		this.logMaxLen = CHAT_LOG_LEN;
 		this.chatLogHistory = new Array(this.logMaxLen);
-		this.LogHistoryNextInputIndex = 0;
+		this.LogHistoryNextInputIndex = 0;		//"end index", next spot to be inputted.
+		this.startIndex = 0;
 	}
 
 	addToLog(text) {
 		this.chatLogHistory[this.LogHistoryNextInputIndex] = text;
-		++this.LogHistoryNextInputIndex;
-		if(this.LogHistoryNextInputIndex >= this.logMaxLen) {
-			this.LogHistoryNextInputIndex = 0;
+		this.LogHistoryNextInputIndex = (this.LogHistoryNextInputIndex+1)%this.logMaxLen;
+		if( (this.LogHistoryNextInputIndex)%(this.logMaxLen) == this.startIndex ) {
+			this.startIndex = (this.startIndex+1)%this.logMaxLen;
 		}
 		document.getElementById('chatLog').innerHTML += (text + "<br>");
 	}
@@ -30,11 +31,10 @@ class chatBox {
 	elementHistory() {
 		var i;
 		var log_hist = "";
-		for( i = this.LogHistoryNextInputIndex; (i%this.logMaxLen) != (this.LogHistoryNextInputIndex - 1); ++i ) {	//once i == this.logMaxLen, will roll over and start at 0.
-			if(i == this.logMaxLen) {
-				i = 0;
-			}
-			log_hist += this.chatLogHistory[i];
+		for( i = this.startIndex; i < this.LogHistoryNextInputIndex; ++i ) {	
+			log_hist += this.chatLogHistory[ i%this.logMaxLen ];
+			log_hist += "<br>";
+			console.log("index:"+(i%this.logMaxLen));
 		}	
 
 		return log_hist;
@@ -42,6 +42,7 @@ class chatBox {
 
 	displayHistory() {
 		var chatData = this.elementHistory();
+		console.log(chatData);
 		document.getElementById('chatHistory').innerHTML = chatData;
 	}
 
@@ -230,7 +231,7 @@ class game {
 			currentContent += "<br>";
 		}
 		
-		document.getElementById('gameViewPort').innerHTML += currentContent;
+		document.getElementById('playerList').innerHTML += currentContent;
 	}
 
 	validMove(direction, x, y) {	// @arg: string, int, int
@@ -342,7 +343,11 @@ class game {
 		return;
 	}
 
-	getMove() {		
+	showChatHistory() {
+		this.chatBox.displayHistory();
+	}
+
+	interface() {		// Also the main frame to handle keypress event handling, such as chat box and movement of game
 		//wait for input
 		$("html").keydown( function(event) {
 			console.log("keydown detected");
@@ -350,8 +355,11 @@ class game {
 			GAME.displayGame(); 
 		} );
 
-
+		document.getElementById("chatHistoryButton").onclick = function() {		// So far this will keep updated after being clicked once. NEED TO FIX THIS SO ONLY HAPPEN WHEN IT CLICKS< FOR PERFORFMANCE 
+			GAME.showChatHistory(); 
+		}
 	}
+	
 }
 
 /* Global variables */
@@ -371,7 +379,7 @@ $(document).ready(function() {
 	console.log(GAME);
 	GAME.addPlayer("shuze");
 	GAME.displayPlayer();
-	GAME.getMove();
 	GAME.displayGame(); 
+	GAME.interface();		// In a sense loops while waiting for user input
 });
 /* } */
