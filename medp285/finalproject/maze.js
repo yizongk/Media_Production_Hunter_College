@@ -112,6 +112,7 @@ class maze_map {
 	/* 
 	 *  0 - empty space
 	 *  1 - wall
+	 *	2 - exit
 	 */
 	constructor() {
 		this.width = MAP_DIMENSION_WIDTH;
@@ -120,29 +121,33 @@ class maze_map {
 		this.map = new Array(this.height);
 		this.wallVal = 1;
 		this.emptySpaceVal = 0;
+		this.exitx = this.width - 1;
+		this.exity = this.height - 1;
 		var i;
 		for( i = 0; i < MAP_DIMENSION_HEIGHT; ++i ) {
 			this.map[i] = new Array(this.width);
 		}
-		this.populateMap();
+		this.setPresetMap();
 	}
 
 	// Pattern generated will be even rows are clear rows, odd rows are all wall except at one random locations.
 	setPresetMap() {
-		var x;
-		for( x = 0; x < this.width; ++x ) {
-			var y;
+		for( var x = 0; x < this.width; ++x ) {
 			var gate = getRandomInt(MAP_DIMENSION_WIDTH); 
-			for( y = 0; y < this.height; ++y ) {
-				if( x%2 == 0 ) {		// If even rows
-					this.map[x][y] = 0;
+			for( var y = 0; y < this.height; ++y ) {
+
+				if(x == this.exitx && y == this.exity) {
+					this.map[y][x] = 2;
+				} else if( x%2 == 0 ) {		// If even columns
+					this.map[y][x] = 0;
 				} else {
-					if( y != gate ) {
-						this.map[x][y] = 1;
+					if( y == gate ) {
+						this.map[y][x] = 0;
 					} else {
-						this.map[x][y] = 0;
+						this.map[y][x] = 1;
 					}
 				}
+
 			}
 		}
 	}
@@ -152,7 +157,7 @@ class maze_map {
 		for( i = 0; i < this.width; ++i ) {
 			var j = 0;
 			for( j = 0; j < this.height; ++j ) {
-				this.map[i][j] = 1;
+				this.map[i][j] = 0;
 			}	
 		}
 	}
@@ -213,7 +218,7 @@ class maze_map {
 	}
 
 	setMapElement(x, y, element) {	// @arg: int, int, int
-		this.map[x][y] = element;
+		this.map[y][x] = element;
 	}
 
 	getWallVal() {
@@ -259,11 +264,11 @@ class game {
 	}
 
 	getWidth() {
-		return this.maze.height;
+		return this.maze.width;
 	}
 
 	getHeight() {
-		return this.maze.width;
+		return this.maze.height;
 	}
 
 	getMapScale() {
@@ -300,18 +305,33 @@ class game {
 
 		var mapArr = this.getMapArr();
 
-		for( var y = 0; y < this.getHeight(); ++y ) {
-			for( var x = 0; x < this.getWidth(); ++x ) {
+		for( var x = 0; x < this.getWidth(); ++x ) {
+			for( var y = 0; y < this.getHeight(); ++y ) {
 
-				var wall = mapArr[y][x];
+				var object_val = mapArr[y][x];
 
-				if( wall > 0 ) {
+				if(object_val==2) {
+					console.log(object_val);
+				}
+				
+				if( object_val == 1 ) {
 
 					ctx.fillStyle = "rgb(200,200,200)";
 					ctx.fillRect(
 						x * this.maze.getMapScale(),
 						y * this.maze.getMapScale(),
 						this.maze.getMapScale(),this.maze.getMapScale()
+					);
+
+				}
+
+				if( object_val == 2 ) {
+
+					ctx.fillStyle = "rgb(0,255,0)";
+					ctx.fillRect(
+						x * this.maze.getMapScale(),
+						y * this.maze.getMapScale(),
+						this.maze.getMapScale(), this.maze.getMapScale()
 					);
 
 				}
@@ -447,6 +467,14 @@ class game {
 		this.chatBuffer += String.fromCharCode(event);
 	}
 
+	gameWon() {
+		var player = this.whichPlayer();
+
+
+
+		return false;
+	}
+
 	keyDownEventHandler(event) {
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 
@@ -516,7 +544,7 @@ const 	GAME = new game();
 var 	GG = false;
 
 /* Defining some global variables */
-GAME.setPresetMap();
+
 
 /* MAIN() */
 $(document).ready(function() {
