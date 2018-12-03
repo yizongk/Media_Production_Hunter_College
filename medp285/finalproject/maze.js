@@ -377,12 +377,12 @@ class game {
 }
 
 /* Global variables */
-var PLAYER_ID = 0;
-const MAX_PLAYER = 10;
-const MAP_DIMENSION = 10;
-const CHAT_LOG_LEN = 100;
-const GAME = new game();
-var GG = false;
+var 	PLAYER_ID = 0;
+const 	MAX_PLAYER = 10;
+const 	MAP_DIMENSION = 10;
+const 	CHAT_LOG_LEN = 100;
+const 	GAME = new game();
+var 	GG = false;
 
 /* Defining some global variables */
 GAME.setPresetMap();
