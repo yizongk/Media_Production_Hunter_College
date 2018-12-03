@@ -496,12 +496,31 @@ class game {
 	}
 
 	restart() {
-		//pop up with test: You win! Would like you to restart or stay on current map? op1: Stay on current game op2: Start new game 
-		//if() opt1 	
-			//return;
 		this.setPresetMap();
 		for( var i = 0; i < this.playerCount; ++i ) {
 			this.playerArr[i].resetPos( PLAYER_INI_X, PLAYER_INI_Y );
+		}
+		this.drawGameMap();
+		return;
+	}
+	
+	promptPopup() {
+		var popup = document.getElementById("popup");
+		var btnStay = document.getElementById("popupStay");
+		var btnRestart = document.getElementById("popupRestart");
+		
+		// Turn on pop up
+		popup.style.display = "block";
+
+		btnStay.onclick = function() {
+			popup.style.display = "none";
+			return;
+		}
+		
+		btnRestart.onclick = function() {
+			GAME.restart();
+			popup.style.display = "none";
+			return;
 		}
 		return;
 	}
@@ -516,6 +535,7 @@ class game {
 				this.movePlayer(event, player);
 				if( this.gameWon() ) {
 					console.log("Game Won");
+					this.promptPopup();
 				}
 			} else {
 				console.log("Invalid Move");
