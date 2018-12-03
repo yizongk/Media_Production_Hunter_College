@@ -423,7 +423,7 @@ class game {
 		}
 
 
-		if( new_y < 0 || new_y > this.maze.height || new_x < 0 || new_x > this.maze.width ) {
+		if( new_y < 0 || new_y > this.maze.height-1 || new_x < 0 || new_x > this.maze.width-1 ) {
 			return false;
 		}
 		
