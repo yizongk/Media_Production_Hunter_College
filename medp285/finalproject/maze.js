@@ -324,7 +324,7 @@ class game {
 			}
 
 			var d = new Date();	
-			var complete_chat = "[" + d.toDateString() + ", " + d.getHours() + ":" + d.getMinutes() + ":" + d.getFullYear() + "] " + player.name + ":" + this.chatBuffer;
+			var complete_chat = "[" + d.toDateString() + ", " + d.getHours() + ":" + d.getMinutes() + ":" + d.getFullYear() + "] <strong>" + player.name + "</strong>:" + this.chatBuffer;
 			this.chatBox.addToLog(complete_chat, player.id);
 			this.chatBuffer = "";
 			return;
@@ -357,6 +357,7 @@ class game {
 	}
 
 	showChatHistory() {
+		console.log("showHistoryLog()");
 		this.chatBox.displayHistory();
 	}
 
@@ -368,10 +369,9 @@ class game {
 			GAME.displayGame(); 
 		} );
 
-		document.getElementById("chatHistoryButton").onclick = function() {		// So far this will keep updated after being clicked once. NEED TO FIX THIS SO ONLY HAPPEN WHEN IT CLICKS< FOR PERFORFMANCE 
-			console.log("chat history activated button");
-			GAME.showChatHistory(); 
-		}
+		document.getElementById("chatHistoryButton").addEventListener("click", function() {
+			GAME.showChatHistory();
+		});
 	}
 	
 }
