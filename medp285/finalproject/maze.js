@@ -75,6 +75,7 @@ class player {
 		this.name = name;
 		this.posX = x;
 		this.posY = y;
+		this.online = false;
 	}
 
 	moveUp() {				// minus minus cuz 0,0 is at top left corner of the map. the Y increases going downward, while X increase going rightward.
@@ -89,6 +90,15 @@ class player {
 	moveRight() {
 		++this.posY;
 	}
+	login() {
+		this.online = true;
+	}
+	logout() {
+		this.online = false;
+	}
+	isOnline() {
+		return this.online;
+	}
 }
 
 // Display is trasverse y first then x, because x are dipslayed vertically in js for some reason.
@@ -101,7 +111,7 @@ class maze_map {
 		for( i = 0; i < MAP_DIMENSION; ++i ) {
 			this.map[i] = new Array(this.dimensionY);
 		}
-		this.populate();
+		this.populateMap();
 	}
 
 	// Pattern generated will be even rows are clear rows, odd rows are all wall except at one random locations.
@@ -124,7 +134,7 @@ class maze_map {
 		}
 	}
 
-	populate() {
+	populateMap() {
 		var i;
 		for( i = 0; i < this.dimensionY; ++i ) {
 			var j = 0;
@@ -149,7 +159,7 @@ class maze_map {
 		return currentContent;
 	}
 
-	elementMapWithPlayer(playerOnlineArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
+	elementMapWithPlayer(playerArr, playerCount) {	// @arg: both are mean to be cpp const and not be changed.
 		var currentContent = "";
 
 		var i;
@@ -159,7 +169,7 @@ class maze_map {
 				var playerMark = false;
 				var subi;
 				for( subi = 0; subi < playerCount; ++subi ) {
-					if( i == playerOnlineArr[subi].posX && j == playerOnlineArr[subi].posY ) {
+					if( i == playerArr[subi].posX && j == playerArr[subi].posY ) {
 						playerMark = true;
 					}
 				}
@@ -186,7 +196,7 @@ class game {
 	constructor() {
 		this.maze = new maze_map();
 		this.playerCount = 0;
-		this.playerOnlineArr = new Array(MAX_PLAYER);
+		this.playerArr = new Array(MAX_PLAYER);
 		this.chatBox = new chatBox();
 		this.chatBuffer = "";
 	}
@@ -202,13 +212,13 @@ class game {
 	displayGame() {
 		var visualData;
 		console.log("Display game with player");
-		visualData = this.maze.elementMapWithPlayer( this.playerOnlineArr, this.playerCount );
+		visualData = this.maze.elementMapWithPlayer( this.playerArr, this.playerCount );
 		document.getElementById('gameViewPort').innerHTML = visualData;
 	}
 
-	addPlayer(name) {
-		if( this.playerCount < this.playerOnlineArr.length ) {
-			this.playerOnlineArr[this.playerCount] = new player(name,0,0);
+	addPlayer(player) {
+		if( this.playerCount < this.playerArr.length ) {
+			this.playerArr[this.playerCount] = player;
 			++this.playerCount;
 		} else {
 			console.log("Max amount of players has been reached.");
@@ -217,13 +227,14 @@ class game {
 
 	displayPlayer() {
 		var currentContent = "";
-
 		var i;
-		currentContent += "Players:";
-		currentContent += "<br>";
 
 		for( i = 0; i < this.playerCount; ++i ) {
-			currentContent += (i + ". " + this.playerOnlineArr[i].name + " with id: " + this.playerOnlineArr[i].id);
+			if( this.playerArr[i].isOnline() ) {
+				currentContent += ("(Online)" + i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id);
+			} else {
+				currentContent += ("(Offline)" + i + ". " + this.playerArr[i].name + " with id: " + this.playerArr[i].id);
+			}
 			currentContent += "<br>";
 		}
 		
@@ -296,11 +307,11 @@ class game {
 	}
 
 	/* Decider for which player is giving this script the inputs from client side. WILL IMPLEMENT IN FUTURE */
-	whichPlayer() {		// for now returns the last player in the playerOnlineArr.
+	whichPlayer() {		// for now returns the last player in the playerArr.
 		if( this.playerCount == 0 ) {
 			console.log("whichPlayer() player count is zero");
 		}
-		return this.playerOnlineArr[this.playerCount - 1];
+		return this.playerArr[this.playerCount - 1];
 	}
 
 	/* Client side function, will implement it as such in the future, for now it's not */
@@ -358,6 +369,7 @@ class game {
 		} );
 
 		document.getElementById("chatHistoryButton").onclick = function() {		// So far this will keep updated after being clicked once. NEED TO FIX THIS SO ONLY HAPPEN WHEN IT CLICKS< FOR PERFORFMANCE 
+			console.log("chat history activated button");
 			GAME.showChatHistory(); 
 		}
 	}
@@ -378,7 +390,9 @@ GAME.setPresetMap();
 /* MAIN() */
 $(document).ready(function() {
 	console.log(GAME);
-	GAME.addPlayer("shuze");
+	var p = new player("shuze",0,0);
+	p.login();
+	GAME.addPlayer(p);
 	GAME.displayPlayer();
 	GAME.displayGame(); 
 	GAME.interface();		// In a sense loops while waiting for user input
