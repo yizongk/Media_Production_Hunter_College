@@ -303,10 +303,13 @@ class game {
 		return this.playerOnlineArr[this.playerCount - 1];
 	}
 
-	collectChat(event) {		// Will collect chat until 'enter' is hit and then will add to chat
+	/* Client side function, will implement it as such in the future, for now it's not */
+	collectChat(event, player) {		// Will collect chat until 'enter' is hit and then will add to chat
 		console.log("text event");
 		if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
-			this.chatBox.addToLog(this.chatBuffer, player.id);
+			var d = new Date();	
+			var complete_chat = d.toDateString() + " " + d.toTimeString() + "(" + player.name + "):" + this.chatBuffer;
+			this.chatBox.addToLog(complete_chat, player.id);
 			this.chatBuffer = "";
 			return;
 		}
@@ -329,7 +332,7 @@ class game {
 				console.log("Invalid Move");
 			}
 		} else if( this.chatBox.validText(event) ) {		// Text box event handling
-			this.collectChat(event);
+			this.collectChat(event, player);
 		} else {
 			console.log("Non text event");
 		}
