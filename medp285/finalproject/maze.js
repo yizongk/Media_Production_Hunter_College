@@ -69,26 +69,26 @@ class chatBox {
 
 // Display is y is row and x is column, because x are dipslayed vertically in js for some reason.
 class player {
-	constructor(name, x, y) {	// @arg: string, int, int  
+	constructor(name, pos_x, pos_y) {	// @arg: string, int, int  
 		this.id = PLAYER_ID;
 		PLAYER_ID++;
 		this.name = name;
-		this.posX = x;
-		this.posY = y;
+		this.x = pos_x;
+		this.y = pos_y;
 		this.online = false;
 	}
 
 	moveUp() {				// minus minus cuz 0,0 is at top left corner of the map. the Y increases going downward, while X increase going rightward.
-		--this.posX;
+		--this.y;
 	}
 	moveDown() {
-		++this.posX;
+		++this.y;
 	}
 	moveLeft() {
-		--this.posY;
+		--this.x;
 	}
 	moveRight() {
-		++this.posY;
+		++this.x;
 	}
 	login() {
 		this.online = true;
@@ -101,21 +101,22 @@ class player {
 	}
 }
 
-// Display is trasverse y first then x, because x are dipslayed vertically in js for some reason.
+// Display is trasverse y (y isthe first dimension of the array) first then x (x is the 2nd dimension of the array), because x are dipslayed vertically in js for some reason.
 class maze_map {
 	/* 
 	 *  0 - empty space
 	 *  1 - wall
 	 */
 	constructor() {
-		this.dimensionX = MAP_DIMENSION;
-		this.dimensionY = MAP_DIMENSION;
-		this.map = new Array(this.dimensionX);
+		this.width = MAP_DIMENSION;
+		this.height = MAP_DIMENSION;
+		this.mapScale =   MAP_SCALE;
+		this.map = new Array(this.height);
 		this.wallVal = 1;
 		this.emptySpaceVal = 0;
 		var i;
 		for( i = 0; i < MAP_DIMENSION; ++i ) {
-			this.map[i] = new Array(this.dimensionY);
+			this.map[i] = new Array(this.width);
 		}
 		this.populateMap();
 	}
@@ -123,10 +124,10 @@ class maze_map {
 	// Pattern generated will be even rows are clear rows, odd rows are all wall except at one random locations.
 	setPresetMap() {
 		var x;
-		for( x = 0; x < this.dimensionY; ++x ) {
+		for( x = 0; x < this.width; ++x ) {
 			var y;
 			var gate = getRandomInt(MAP_DIMENSION); 
-			for( y = 0; y < this.dimensionX; ++y ) {
+			for( y = 0; y < this.height; ++y ) {
 				if( x%2 == 0 ) {		// If even rows
 					this.map[x][y] = 0;
 				} else {
@@ -142,9 +143,9 @@ class maze_map {
 
 	populateMap() {
 		var i;
-		for( i = 0; i < this.dimensionY; ++i ) {
+		for( i = 0; i < this.width; ++i ) {
 			var j = 0;
-			for( j = 0; j < this.dimensionX; ++j ) {
+			for( j = 0; j < this.height; ++j ) {
 				this.map[i][j] = 1;
 			}	
 		}
@@ -154,9 +155,9 @@ class maze_map {
 		var currentContent = "";
 
 		var i;
-		for( i = 0; i < this.dimensionY; ++i ) {
+		for( i = 0; i < this.width; ++i ) {
 			var j;
-			for( j = 0; j < this.dimensionX; ++j ) {
+			for( j = 0; j < this.height; ++j ) {
 				if( this.map[i][j] == 0 ) {
 					currentContent += "-";
 				} else if( this.map[i][j] == 1 ) {
@@ -175,13 +176,13 @@ class maze_map {
 		var currentContent = "";
 
 		var i;
-		for( i = 0; i < this.dimensionY; ++i ) {
+		for( i = 0; i < this.width; ++i ) {
 			var j;
-			for( j = 0; j < this.dimensionX; ++j ) {
+			for( j = 0; j < this.height; ++j ) {
 				var playerMark = false;
 				var subi;
 				for( subi = 0; subi < playerCount; ++subi ) {
-					if( i == playerArr[subi].posX && j == playerArr[subi].posY ) {
+					if( i == playerArr[subi].x && j == playerArr[subi].y ) {
 						playerMark = true;
 					}
 				}
@@ -216,6 +217,22 @@ class maze_map {
 	getEmptySpaceVal() {
 		return this.emptySpaceVal;
 	}
+
+	getMapArr() {
+		return this.map;
+	}
+
+	getMapScale() {
+		return this.mapScale;
+	}
+
+	getWidth() {
+		return this.height;
+	}
+
+	getHeight() {
+		return this.width;
+	}
 }
 
 class game {
@@ -231,15 +248,95 @@ class game {
 		this.maze.setPresetMap();
 	}
 
-	displayMap() {
-		this.maze.displayMap();
+	getMapArr() {
+		return this.maze.getMapArr();
 	}
 
-	drawGame() {
-		var visualData;
+	getWidth() {
+		return this.maze.height;
+	}
+
+	getHeight() {
+		return this.maze.width;
+	}
+
+	getMapScale() {
+		return this.maze.mapScale;
+	}
+
+	drawGameMap() {
+		/* var visualData;
 		console.log("Display game with player");
 		visualData = this.maze.elementMapWithPlayer( this.playerArr, this.playerCount );
-		document.getElementById('gameViewPort').innerHTML = visualData;
+		document.getElementById('gameViewPort').innerHTML = visualData; */
+
+		var $ = function(id) { return document.getElementById(id); };
+
+		var map = $("map");
+		var mapContainer = $("gameViewPort");
+		var mapObjs = $("mapObjects");
+
+		map.width = this.getWidth() * this.getMapScale();					// resize the internal canvas dimensions 
+		map.height = this.getHeight() * this.getMapScale();
+		mapObjs.width = map.width;
+		mapObjs.height = map.height;
+
+		var w = (this.getWidth() * this.getMapScale()) + "px";		// minimap CSS dimensions
+		var h = (this.getHeight() * this.getMapScale()) + "px";
+	
+		map.style.width = mapObjs.style.width = mapContainer.style.width = w;
+		map.style.height = mapObjs.style.height = mapContainer.style.height = h;
+	
+		var ctx = map.getContext("2d");
+
+		ctx.fillStyle = "white";
+		ctx.fillRect(0,0,map.width,map.height);
+
+		var mapArr = this.getMapArr();
+
+		for( var y = 0; y < this.getHeight(); ++y ) {
+			for( var x = 0; x < this.getWidth(); ++x ) {
+
+				var wall = mapArr[y][x];
+
+				if( wall > 0 ) {
+
+					ctx.fillStyle = "rgb(200,200,200)";
+					ctx.fillRect(
+						x * this.maze.getMapScale(),
+						y * this.maze.getMapScale(),
+						this.maze.getMapScale(),this.maze.getMapScale()
+					);
+
+				}
+			}
+		}
+
+		this.updateGameMap();
+		return;
+	}
+
+	updateGameMap() {
+
+		var $ = function(id) { return document.getElementById(id); };
+
+		var map = $("map");
+		var mapObjs = $("mapObjects");
+
+		var objCtx = mapObjs.getContext("2d");
+		mapObjs.width = mapObjs.width;
+
+		for( var i = 0; i < this.playerCount; ++i ) {
+			console.log("UPDATE RAN");
+			objCtx.fillStyle = "black";
+			objCtx.fillRect(	// draw a dot at the current player position
+				this.playerArr[i].x * this.getMapScale() - 2,
+				this.playerArr[i].y * this.getMapScale() - 2,
+				4, 4
+			);
+		}
+		
+		return;
 	}
 
 	addPlayer(player) {
@@ -268,51 +365,33 @@ class game {
 	}
 
 	validMove(event, x, y) {	// @arg: string, int, int
-		var wall = this.maze.getWallVal();
 		var blank = this.maze.getEmptySpaceVal();
+		var new_x = x;
+		var new_y = y;
 
-		if(event == 38) {	// up
-			//top lane
-			if( x <= 0 ) {
-				return false;
-			}
-			if( this.maze.map[x-1][y] != blank ) {
-				return false;
-			}
+		if( event == 38 ) {		// up
+			--new_y;
 		}
-		if(event == 40) {	// down
-			//bot lane
-			if( x >= (this.maze.dimensionX - 1) ) {
-				return false;
-			}
-			if( this.maze.map[x+1][y] != blank ) {
-				return false;
-			}
+		if( event == 40 ) {		// down
+			++new_y;
 		}
-		if(event == 37) {	// left
-			//left lane
-			if( y <= 0 ) {
-				return false;
-			}
-			if( this.maze.map[x][y-1] != blank ) {
-				return false;
-			}
+		if( event == 37 ) {		// left
+			--new_x;
 		}
-		if(event == 39) { 	// right
-			//right lane	
-			if( y >= (this.maze.dimensionY - 1) ) {
-				return false;
-			}
-			if( this.maze.map[x][y+1] != blank ) {
-				return false;
-			}
+		if( event == 39 ) {		// right
+			++new_x;
 		}
 
-		if( event == 38 || event == 40 || event == 37 || event == 39 ) {
-			return true;
+
+		if( new_y < 0 || new_y > this.maze.height || new_x < 0 || new_x > this.maze.width ) {
+			return false;
+		}
+		
+		if( this.maze.map[new_y][new_x] != blank ) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	movePlayer(event, player) { // @arg string, player&
@@ -368,7 +447,7 @@ class game {
 		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
 			console.log("keydown()")
 	
-			if( this.validMove( event, player.posX, player.posY ) ) {
+			if( this.validMove( event, player.x, player.y ) ) {
 				this.movePlayer(event, player);
 			} else {
 				console.log("Invalid Move");
@@ -387,12 +466,12 @@ class game {
 		this.chatBox.displayHistory();
 	}
 
-	interface() {		// Also the main frame to handle keypress event handling, such as chat box and movement of game
+	gameCycle() {		// Also the main frame to handle keypress event handling, such as chat box and movement of game
 		//wait for input
 		$("html").keydown( function(event) {
 			console.log("keydown detected");
 			GAME.keyPressEventHandler(event.which);
-			GAME.drawGame(); 
+			GAME.updateGameMap(); 
 		} );
 
 		document.getElementById("chatHistoryButton").addEventListener("click", function() {
@@ -405,7 +484,8 @@ class game {
 /* Global variables */
 var 	PLAYER_ID = 0;
 const 	MAX_PLAYER = 10;
-const 	MAP_DIMENSION = 10;
+const 	MAP_DIMENSION = 35;
+const	MAP_SCALE = 8;
 const 	CHAT_LOG_LEN = 100;
 const 	GAME = new game();
 var 	GG = false;
@@ -420,6 +500,6 @@ $(document).ready(function() {
 	p.login();
 	GAME.addPlayer(p);
 	GAME.displayPlayer();
-	GAME.drawGame(); 
-	GAME.interface();		// In a sense loops while waiting for user input
+	GAME.drawGameMap(); 
+	GAME.gameCycle();		// In a sense loops while waiting for user input
 });
