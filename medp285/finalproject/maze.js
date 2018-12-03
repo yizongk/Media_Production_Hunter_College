@@ -121,6 +121,7 @@ class maze_map {
 		this.map = new Array(this.height);
 		this.wallVal = 1;
 		this.emptySpaceVal = 0;
+		this.exitVal = 2;
 		this.exitx = this.width - 1;
 		this.exity = this.height - 1;
 		var i;
@@ -128,6 +129,14 @@ class maze_map {
 			this.map[i] = new Array(this.width);
 		}
 		this.setPresetMap();
+	}
+
+	getExitX() {
+		return this.exitx;
+	}
+
+	getExitY() {
+		return this.exity;
 	}
 
 	// Pattern generated will be even rows are clear rows, odd rows are all wall except at one random locations.
@@ -227,6 +236,10 @@ class maze_map {
 
 	getEmptySpaceVal() {
 		return this.emptySpaceVal;
+	}
+
+	getExitVal() {
+		return this.exitVal;
 	}
 
 	getMapArr() {
@@ -392,6 +405,7 @@ class game {
 
 	validMove(event, x, y) {	// @arg: string, int, int
 		var blank = this.maze.getEmptySpaceVal();
+		var exit = this.maze.getExitVal();
 		var new_x = x;
 		var new_y = y;
 
@@ -413,11 +427,11 @@ class game {
 			return false;
 		}
 		
-		if( this.maze.map[new_y][new_x] != blank ) {
-			return false;
+		if( this.maze.map[new_y][new_x] == blank || this.maze.map[new_y][new_x] == exit ) {
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	movePlayer(event, player) { // @arg string, player&
@@ -470,7 +484,9 @@ class game {
 	gameWon() {
 		var player = this.whichPlayer();
 
-
+		if( player.x == this.maze.exitx && player.y == this.maze.exity ) {
+			return true;
+		}
 
 		return false;
 	}
@@ -483,6 +499,9 @@ class game {
 	
 			if( this.validMove( event, player.x, player.y ) ) {
 				this.movePlayer(event, player);
+				if( this.gameWon() ) {
+					console.log("Game Won");
+				}
 			} else {
 				console.log("Invalid Move");
 			}
