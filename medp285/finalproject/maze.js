@@ -105,6 +105,10 @@ class player {
 	isOnline() {
 		return this.online;
 	}
+	resetPos( posx, posy ) {	// @arg: int int
+		this.x = posx;
+		this.y = posy;
+	}
 }
 
 // Display is trasverse y (y isthe first dimension of the array) first then x (x is the 2nd dimension of the array), because x are dipslayed vertically in js for some reason.
@@ -491,6 +495,17 @@ class game {
 		return false;
 	}
 
+	restart() {
+		//pop up with test: You win! Would like you to restart or stay on current map? op1: Stay on current game op2: Start new game 
+		//if() opt1 	
+			//return;
+		this.setPresetMap();
+		for( var i = 0; i < this.playerCount; ++i ) {
+			this.playerArr[i].resetPos( PLAYER_INI_X, PLAYER_INI_Y );
+		}
+		return;
+	}
+
 	keyDownEventHandler(event) {
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 
@@ -555,6 +570,8 @@ class game {
 /* Global variables */
 var 	PLAYER_ID = 0;
 const 	MAX_PLAYER = 10;
+const 	PLAYER_INI_X = 0;
+const 	PLAYER_INI_Y = 0;
 const 	MAP_DIMENSION_WIDTH = 35;
 const 	MAP_DIMENSION_HEIGHT = 40;
 const	MAP_SCALE = 13;
@@ -568,7 +585,7 @@ var 	GG = false;
 /* MAIN() */
 $(document).ready(function() {
 	console.log(GAME);
-	var p = new player("shuze",0,0);
+	var p = new player("shuze",PLAYER_INI_X,PLAYER_INI_Y);
 	p.login();
 	GAME.addPlayer(p);
 	GAME.displayPlayer();
