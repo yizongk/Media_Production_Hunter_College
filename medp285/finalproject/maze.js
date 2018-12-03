@@ -307,8 +307,13 @@ class game {
 	collectChat(event, player) {		// Will collect chat until 'enter' is hit and then will add to chat
 		console.log("text event");
 		if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
+			if( this.chatBuffer == "" ) {
+				console.log("chatBuffer empty");
+				return;
+			}
+
 			var d = new Date();	
-			var complete_chat = d.toDateString() + " " + d.toTimeString() + "(" + player.name + "):" + this.chatBuffer;
+			var complete_chat = "[" + d.toDateString() + ", " + d.getHours() + ":" + d.getMinutes() + ":" + d.getFullYear() + "] " + player.name + ":" + this.chatBuffer;
 			this.chatBox.addToLog(complete_chat, player.id);
 			this.chatBuffer = "";
 			return;
