@@ -114,14 +114,14 @@ class maze_map {
 	 *  1 - wall
 	 */
 	constructor() {
-		this.width = MAP_DIMENSION;
-		this.height = MAP_DIMENSION;
+		this.width = MAP_DIMENSION_WIDTH;
+		this.height = MAP_DIMENSION_HEIGHT;
 		this.mapScale =   MAP_SCALE;
 		this.map = new Array(this.height);
 		this.wallVal = 1;
 		this.emptySpaceVal = 0;
 		var i;
-		for( i = 0; i < MAP_DIMENSION; ++i ) {
+		for( i = 0; i < MAP_DIMENSION_HEIGHT; ++i ) {
 			this.map[i] = new Array(this.width);
 		}
 		this.populateMap();
@@ -132,7 +132,7 @@ class maze_map {
 		var x;
 		for( x = 0; x < this.width; ++x ) {
 			var y;
-			var gate = getRandomInt(MAP_DIMENSION); 
+			var gate = getRandomInt(MAP_DIMENSION_WIDTH); 
 			for( y = 0; y < this.height; ++y ) {
 				if( x%2 == 0 ) {		// If even rows
 					this.map[x][y] = 0;
@@ -450,6 +450,7 @@ class game {
 	keyPressEventHandler(event) {
 		var input;
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
+
 		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
 			console.log("keydown()")
 	
@@ -475,6 +476,11 @@ class game {
 	gameCycle() {		// Also the main frame to handle keypress event handling, such as chat box and movement of game
 		//wait for input
 		$("html").keydown( function(event) {
+			// Disable the default arrow scrolling 
+			if( event.which==37 || event.which==38 || event.which==39 || event.which==40 ) {
+				event.preventDefault();
+			}
+
 			console.log("keydown detected");
 			GAME.keyPressEventHandler(event.which);
 			GAME.updateGameMap(); 
@@ -490,8 +496,9 @@ class game {
 /* Global variables */
 var 	PLAYER_ID = 0;
 const 	MAX_PLAYER = 10;
-const 	MAP_DIMENSION = 35;
-const	MAP_SCALE = 8;
+const 	MAP_DIMENSION_WIDTH = 35;
+const 	MAP_DIMENSION_HEIGHT = 40;
+const	MAP_SCALE = 13;
 const 	CHAT_LOG_LEN = 100;
 const 	GAME = new game();
 var 	GG = false;
