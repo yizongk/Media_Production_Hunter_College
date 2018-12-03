@@ -188,7 +188,7 @@ class game {
 		this.playerCount = 0;
 		this.playerOnlineArr = new Array(MAX_PLAYER);
 		this.chatBox = new chatBox();
-		this.textBuffer = "";
+		this.chatBuffer = "";
 	}
 
 	setPresetMap() {
@@ -285,6 +285,20 @@ class game {
 		return this.playerOnlineArr[this.playerCount - 1];
 	}
 
+	collectChat(event) {		// Will collect chat until 'enter' is hit and then will add to chat
+		console.log("text event");
+		if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
+			this.chatBox.addToLog(this.chatBuffer, player.id);
+			this.chatBuffer = "";
+			return;
+		}
+		if(event == 8) {			// if event is 'backspace', which is value 8, will not take into chatBuffer, will delete last char in textBuffer
+			this.chatBuffer = this.chatBuffer.substr(0, str.length-1);
+			return;
+		}
+		this.chatBuffer += String.fromCharCode(event);
+	}
+
 	keyPressEventHandler(event) {
 		var input;
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
@@ -322,17 +336,7 @@ class game {
 				console.log("Invalid Move");
 			}
 		} else if( this.chatBox.validText(event) ) {		// Text box event handling
-			console.log("text event");
-			if(event == 13) {		// if event is 'enter', which is value 13, will not take in the 'enter value'
-				this.chatBox.addToLog(this.textBuffer, player.id);
-				this.textBuffer = "";
-				return;
-			}
-			if(event == 8) {			// if event is 'backspace', which is value 8, will not take into textBuffer, will delete last char in textBuffer
-				this.textBuffer = this.textBuffer.substr(0, str.length-1);
-				return;
-			}
-			this.textBuffer += String.fromCharCode(event);
+			this.collectChat(event);
 		} else {
 			console.log("Non text event");
 		}
