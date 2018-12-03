@@ -1,0 +1,139 @@
+@charset "UTF-8";
+/* CSS Document */
+  
+/* Block Level Elements */
+body {
+  background-color: #333333;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+  background-image: url(img/bg.png);
+  }
+
+h1 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 36px;
+  line-height: 20px;
+  }
+
+h2 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 18px;
+  line-height: 20px;
+  }
+
+p {
+  padding-left: 30px;
+  padding-right: 10px;
+  }
+
+img {
+  padding: 10px;
+  }
+
+table tr td {
+  padding: 10px;
+  }
+
+/*text variations*/
+.quotes {font-style: italic;}
+
+/* Link appearance */
+a, a:link, a:visited, a:active {
+   font-style : normal;
+   font-weight : bold;
+   font-size : 11px;
+   font-family : Verdana, Arial, Helvetica, sans-serif;
+   color : #000000;
+   text-decoration : none;
+   border:0px;
+   background-color: #FFFFCC;
+   padding-left: 5px;
+   padding-right: 5px;
+}
+
+a:hover {
+   background-color: #FFCCCC;
+}
+
+/* Layout */
+#main {
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+  border: 1px solid #000000;
+  background-color: #ffffff;
+  }
+
+#header {
+  top:0px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  height: 100px;
+  width: 960px;
+  padding: 0px;
+  background-color: #333333;
+  background-image: url(img/header.png);
+  background-repeat: no-repeat;
+  }
+
+#header p {
+  float: right;
+  vertical-align: bottom;
+  color: #ffffff;
+  }
+
+#bodyCopy{
+position: relative;
+  }
+   
+#nav {
+  float: right;
+  width: 200px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border:1px solid #999999;
+  padding: 5px;
+  background-color: #ffffff;
+  }
+
+/*Styling Navigation List*/
+#nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  }
+
+#nav li {
+  background-image: url(img/arrow.gif);
+  background-repeat: no-repeat;
+  background-position: 0px;
+  padding-left: 10px;
+  /*line-height: 24px;*/
+  }
+
+/*Styling Footer Navigation*/
+#footer {
+  clear: both;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  width: 90%;
+  border: 1px solid #000000;
+  padding: 5px;
+  }
+  
+#footer ul
+{
+margin: 0;
+padding: 0;
+list-style-type: none;
+text-align: center;
+}
+
+#footer ul li { 
+  display: inline;
+  margin-right: 5px;
+  }
