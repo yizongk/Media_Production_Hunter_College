@@ -235,7 +235,7 @@ class game {
 		this.maze.displayMap();
 	}
 
-	displayGame() {
+	drawGame() {
 		var visualData;
 		console.log("Display game with player");
 		visualData = this.maze.elementMapWithPlayer( this.playerArr, this.playerCount );
@@ -392,7 +392,7 @@ class game {
 		$("html").keydown( function(event) {
 			console.log("keydown detected");
 			GAME.keyPressEventHandler(event.which);
-			GAME.displayGame(); 
+			GAME.drawGame(); 
 		} );
 
 		document.getElementById("chatHistoryButton").addEventListener("click", function() {
@@ -420,6 +420,6 @@ $(document).ready(function() {
 	p.login();
 	GAME.addPlayer(p);
 	GAME.displayPlayer();
-	GAME.displayGame(); 
+	GAME.drawGame(); 
 	GAME.interface();		// In a sense loops while waiting for user input
 });
