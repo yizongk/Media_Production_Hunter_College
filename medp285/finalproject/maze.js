@@ -230,10 +230,11 @@ class game {
 		document.getElementById('playerList').innerHTML += currentContent;
 	}
 
-	validMove(direction, x, y) {	// @arg: string, int, int
+	validMove(event, x, y) {	// @arg: string, int, int
 		var wall = "*";
 		var blank = "-";
-		if(direction == "up") {
+
+		if(event == 38) {	// up
 			//top lane
 			if( x <= 0 ) {
 				return false;
@@ -242,7 +243,7 @@ class game {
 				return false;
 			}
 		}
-		if(direction == "down") {
+		if(event == 40) {	// down
 			//bot lane
 			if( x >= (this.maze.dimensionX - 1) ) {
 				return false;
@@ -251,7 +252,7 @@ class game {
 				return false;
 			}
 		}
-		if(direction == "left") {
+		if(event == 37) {	// left
 			//left lane
 			if( y <= 0 ) {
 				return false;
@@ -260,7 +261,7 @@ class game {
 				return false;
 			}
 		}
-		if(direction == "right") {
+		if(event == 39) { 	// right
 			//right lane	
 			if( y >= (this.maze.dimensionY - 1) ) {
 				return false;
@@ -270,11 +271,28 @@ class game {
 			}
 		}
 
-		if( direction == "up" || direction == "down" || direction == "left" || direction == "right" ) {
+		if( event == 38 || event == 40 || event == 37 || event == 39 ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	movePlayer(event, player) { // @arg string, player&
+		//update player coor, no need to update map coor, since they are parsed separately
+		if( event == 38 ) {		// up
+			player.moveUp();
+		}
+		if( event == 40 ) {		// down
+			player.moveDown();
+		}
+		if( event == 37 ) {		// left
+			player.moveLeft();
+		}
+		if( event == 39 ) {		// right
+			player.moveRight();
+		}
+		console.log("player move event");
 	}
 
 	/* Decider for which player is giving this script the inputs from client side. WILL IMPLEMENT IN FUTURE */
@@ -303,35 +321,10 @@ class game {
 		var input;
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
-			if(event == 38) {
-				input = "up";
-			}
-			if(event == 40) {
-				input = "down";
-			}
-			if(event == 37) {
-				input = "left";
-			}
-			if(event == 39) {
-				input = "right";
-			}
 			console.log("keydown()")
 	
-			if( this.validMove( input, player.posX, player.posY ) ) {
-				//update player coor, no need to update map coor, since they are parsed separately
-				if( input == "up" ) {
-					player.moveUp();
-				}
-				if( input == "down" ) {
-					player.moveDown();
-				}
-				if( input == "left" ) {
-					player.moveLeft();
-				}
-				if( input == "right" ) {
-					player.moveRight();
-				}
-				console.log("player move event");
+			if( this.validMove( event, player.posX, player.posY ) ) {
+				this.movePlayer(event, player);
 			} else {
 				console.log("Invalid Move");
 			}
