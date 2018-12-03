@@ -1,19 +1,21 @@
-#chatLog {
-    border: 2px solid #000;
-    margin: 1em;
-}
-
 #playerList {
     border: 2px solid #000;
     margin: 1em;
 }
 
-#chatLog {
+#chatLogContainer{
+    position: relative;
     border: 2px solid #000;
     margin: 1em;
     margin-bottom: 0;
-    overflow-y: scroll;
     height: 200px;
+}
+
+#chatLog {
+    /* border: 2px solid #000; */
+    margin-bottom: 0;
+    overflow-y: scroll;
+    height: 80%;
 }
 
 #chatInputBox {
@@ -21,14 +23,19 @@
     margin: 1em;
     position: relative;
     top: 0px;
-    
 }
 
 #chatHistory {
+    position: relative;
     border: 2px solid #000;
     margin: 1em;
     overflow-y: scroll;
     height: 200px;
+}
+
+#chatHistoryButton {
+    position: relative;
+    top: 0;
 }
 
 #gameViewPort {
