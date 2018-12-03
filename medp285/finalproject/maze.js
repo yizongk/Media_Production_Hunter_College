@@ -103,10 +103,16 @@ class player {
 
 // Display is trasverse y first then x, because x are dipslayed vertically in js for some reason.
 class maze_map {
+	/* 
+	 *  0 - empty space
+	 *  1 - wall
+	 */
 	constructor() {
 		this.dimensionX = MAP_DIMENSION;
 		this.dimensionY = MAP_DIMENSION;
 		this.map = new Array(this.dimensionX);
+		this.wallVal = 1;
+		this.emptySpaceVal = 0;
 		var i;
 		for( i = 0; i < MAP_DIMENSION; ++i ) {
 			this.map[i] = new Array(this.dimensionY);
@@ -122,12 +128,12 @@ class maze_map {
 			var gate = getRandomInt(MAP_DIMENSION); 
 			for( y = 0; y < this.dimensionX; ++y ) {
 				if( x%2 == 0 ) {		// If even rows
-					this.map[x][y] = "-";
+					this.map[x][y] = 0;
 				} else {
 					if( y != gate ) {
-						this.map[x][y] = "*";
+						this.map[x][y] = 1;
 					} else {
-						this.map[x][y] = "-";
+						this.map[x][y] = 0;
 					}
 				}
 			}
@@ -139,7 +145,7 @@ class maze_map {
 		for( i = 0; i < this.dimensionY; ++i ) {
 			var j = 0;
 			for( j = 0; j < this.dimensionX; ++j ) {
-				this.map[i][j] = "*";
+				this.map[i][j] = 1;
 			}	
 		}
 	}
@@ -151,7 +157,13 @@ class maze_map {
 		for( i = 0; i < this.dimensionY; ++i ) {
 			var j;
 			for( j = 0; j < this.dimensionX; ++j ) {
-				currentContent += this.map[i][j];
+				if( this.map[i][j] == 0 ) {
+					currentContent += "-";
+				} else if( this.map[i][j] == 1 ) {
+					currentContent += "*";
+				} else {
+					currentContent += "?";
+				} 
 			}
 			currentContent += "<br>";
 		}
@@ -175,7 +187,13 @@ class maze_map {
 				}
 
 				if( playerMark == false ) {									// Checks all players list to see where on the map to mark "x"
-					currentContent += this.map[i][j];
+					if( this.map[i][j] == 0 ) {
+						currentContent += "-";
+					} else if( this.map[i][j] == 1 ) {
+						currentContent += "*";
+					} else {
+						currentContent += "?";
+					} 
 				} else {
 					currentContent += "x";
 				}
@@ -187,8 +205,16 @@ class maze_map {
 		return currentContent;
 	}
 
-	setMapElement(x, y, element) {	// @arg: int, int, string
+	setMapElement(x, y, element) {	// @arg: int, int, int
 		this.map[x][y] = element;
+	}
+
+	getWallVal() {
+		return this.wallVal;
+	}
+
+	getEmptySpaceVal() {
+		return this.emptySpaceVal;
 	}
 }
 
@@ -242,8 +268,8 @@ class game {
 	}
 
 	validMove(event, x, y) {	// @arg: string, int, int
-		var wall = "*";
-		var blank = "-";
+		var wall = this.maze.getWallVal();
+		var blank = this.maze.getEmptySpaceVal();
 
 		if(event == 38) {	// up
 			//top lane
