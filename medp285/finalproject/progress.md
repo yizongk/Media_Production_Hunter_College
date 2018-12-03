@@ -1,7 +1,7 @@
 # Here's the worklist:
 
 * (DONE) Chat box will be scroll-able
-* Show dark chat button only update when click. As of right now, once clicked once, it will keep updating non stop.
+* (DONE) Show dark chat button only update when click. As of right now, once clicked once, it will keep updating non stop.
 * (DONE) Make show dark chat box scroll-able
 * (DONE) Find icon of same size for wall, blank, and player
 * (DONE) implement some visual for the game

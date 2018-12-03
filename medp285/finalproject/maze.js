@@ -447,8 +447,7 @@ class game {
 		this.chatBuffer += String.fromCharCode(event);
 	}
 
-	keyPressEventHandler(event) {
-		var input;
+	keyDownEventHandler(event) {
 		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
 
 		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
@@ -459,21 +458,27 @@ class game {
 			} else {
 				console.log("Invalid Move");
 			}
-		} else if( this.chatBox.validText(event) ) {		// Text box event handling
-			this.collectChat(event, player);
 		} else {
-			console.log("Non text event");
+			console.log("not sure what to say here");
 		}
 
 		return;
 	}
+
+	keyPressEventHandler(event) {
+		var player = this.whichPlayer();
+
+		this.collectChat(event, player);
+	}
+
+
 
 	showChatHistory() {
 		console.log("showHistoryLog()");
 		this.chatBox.displayHistory();
 	}
 
-	gameCycle() {		// Also the main frame to handle keypress event handling, such as chat box and movement of game
+	gameCycle() {		// Also the main frame to handle keydown event handling, such as chat box and movement of game
 		//wait for input
 		$("html").keydown( function(event) {
 			// Disable the default arrow scrolling 
@@ -482,9 +487,16 @@ class game {
 			}
 
 			console.log("keydown detected");
-			GAME.keyPressEventHandler(event.which);
+			GAME.keyDownEventHandler(event.which);
 			GAME.updateGameMap(); 
 		} );
+
+		$("input").keypress( function(e) {
+			GAME.keyPressEventHandler(e.which);
+			if( e.which == 13 ) {		// if input was 'entered', clear input field
+				$(this).val('');
+			}
+		});
 
 		document.getElementById("chatHistoryButton").addEventListener("click", function() {
 			GAME.showChatHistory();
