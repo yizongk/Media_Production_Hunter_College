@@ -1,12 +1,12 @@
-Here's the worklist:
+# Here's the worklist:
 
-* Chat box will be scroll-able
+* (DONE) Chat box will be scroll-able
 * Show dark chat button only update when click. As of right now, once clicked once, it will keep updating non stop.
-* Make show dark chat box scroll-able
+* (DONE) Make show dark chat box scroll-able
 * (DONE) Find icon of same size for wall, blank, and player
 * (DONE) implement some visual for the game
 
-long term idea
+# long term idea
 
 * Have scrpit run in the background, accepts client input somehow
 * on client side, will show game info, chat info and player online info base on database in back end script.

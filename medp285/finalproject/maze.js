@@ -29,7 +29,10 @@ class chatBox {
 		if( (this.LogHistoryNextInputIndex)%(this.logMaxLen) == this.startIndex ) {
 			this.startIndex = (this.startIndex+1)%this.logMaxLen;
 		}
-		document.getElementById('chatLog').innerHTML += (text + "<br>");
+
+		var doc = document.getElementById('chatLog');
+		doc.innerHTML += (text + "<br>");
+		doc.scrollTop = doc.scrollHeight;
 	}
 
 	elementHistory() {
@@ -50,7 +53,10 @@ class chatBox {
 	displayHistory() {
 		var chatData = this.elementHistory();
 		console.log(chatData);
-		document.getElementById('chatHistory').innerHTML = chatData;
+		var doc = document.getElementById('chatHistory');
+		doc.innerHTML = chatData;
+		doc.scrollTop = doc.scrollHeight;
+
 	}
 
 	validText( event ) {	// Check if input is letter or 'backspace' (8) or 'enter' (13) or 'space' (32) and grammar points.
