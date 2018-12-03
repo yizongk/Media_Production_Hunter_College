@@ -370,11 +370,11 @@ class game {
 		mapObjs.width = mapObjs.width;
 
 		for( var i = 0; i < this.playerCount; ++i ) {
-			console.log("UPDATE RAN");
+			console.log("UPDATE RAN drawn player");
 			objCtx.fillStyle = "black";
 			objCtx.fillRect(	// draw a dot at the current player position
-				this.playerArr[i].x * this.getMapScale() - 2,
-				this.playerArr[i].y * this.getMapScale() - 2,
+				this.playerArr[i].x * this.getMapScale() + 4,
+				this.playerArr[i].y * this.getMapScale() + 4,
 				4, 4
 			);
 		}
