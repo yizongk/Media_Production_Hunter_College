@@ -1,0 +1,5 @@
+assumes you have npm installed on your system.
+This is for people who want to install a backend for the maze game with mutiple player on the same map and able to chat with each other. 
+Other wise, the single player version works fine with the html, js and css files provided in the previous directory of this current directory. Just open up maze.html and start playing the single player version.
+
+This directory contains the js files for back end. The html, js, and css for front end. Hopefully I find a way to story arrays in the backend without mysql, dont wanna do too much php work.

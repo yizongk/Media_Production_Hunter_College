@@ -2,6 +2,9 @@
  * const in Javascript doesn't mean c++ const, it just mean a one time assignment. But the element in the variablec an be modified.
  * all objects(arguments and return values) are by passed by reference except for boolean and int.
  * 
+ * Some part of my codes are from following this tutorial
+ * https://dev.opera.com/articles/3d-games-with-canvas-and-raycasting-part-1/
+ * 
  * Author: Yi Zong Kuang
  */
 
@@ -82,7 +85,30 @@ class player {
 		this.x = pos_x;
 		this.y = pos_y;
 		this.online = false;
+
+		/* The following are used for 3d rendition */
+		// The direction that the player is turning,
+		// either -1 for left or 1 for right
+		this.dir = 0;
+		// The current angle of rotation
+		this.rot = 0;
+		// Is the player moving forward (speed = 1)
+		// or backwards (speed = -1)
+		this.speed = 0;
+		// How far (in map units) does the player move each step/update
+		this.moveSpeed = 0.18;
+		// How mcuh does the player rotate each step/update (in radians)
+		this.rotSpeed = 6 * Math.PI/180;
+		/* End of */
 	}
+
+	/* The following are used for 3d rendition */
+	// Move player with Rotation considered, and in a single direction.
+	moveRot(inx, iny) {
+		this.x = inx;
+		this.y = iny;
+	}
+	/* End of */
 
 	moveUp() {				// minus minus cuz 0,0 is at top left corner of the map. the Y increases going downward, while X increase going rightward.
 		--this.y;
@@ -165,12 +191,14 @@ class maze_map {
 		}
 	}
 
-	populateMap() {
-		var i;
-		for( i = 0; i < this.width; ++i ) {
-			var j = 0;
-			for( j = 0; j < this.height; ++j ) {
-				this.map[i][j] = 0;
+	populateBlankMap() {
+		for( var x = 0; x < this.width; ++x ) {
+			for( var y = 0; y < this.height; ++y ) {
+				if(x == this.exitx && y == this.exity) {
+					this.map[y][x] = 2;
+				} else {
+				this.map[y][x] = 0;
+				}
 			}	
 		}
 	}
@@ -276,6 +304,10 @@ class game {
 		this.maze.setPresetMap();
 	}
 
+	setBlankMap() {
+		this.maze.populateBlankMap();
+	}
+
 	getMapArr() {
 		return this.maze.getMapArr();
 	}
@@ -371,11 +403,11 @@ class game {
 
 		for( var i = 0; i < this.playerCount; ++i ) {
 			console.log("UPDATE RAN drawn player");
-			objCtx.fillStyle = "black";
+			objCtx.fillStyle = "red";
 			objCtx.fillRect(	// draw a dot at the current player position
 				this.playerArr[i].x * this.getMapScale() + 4,
 				this.playerArr[i].y * this.getMapScale() + 4,
-				4, 4
+				8, 8
 			);
 		}
 		
@@ -437,6 +469,139 @@ class game {
 
 		return false;
 	}
+
+	isBlocking(x,y) {
+		if (y < 0 || y > this.maze.height-1 || x < 0 || x > this.maze.width-1)
+			return true;
+
+		if( this.maze.map[Math.floor(y)][Math.floor(x)] == blank || this.maze.map[Math.floor(y)][Math.floor(x)] == exit ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/* The following are used for 3d rendition */
+	// Move player with Rotation considered, and in a single direction.
+	// Assumes move has been validize
+	movePlayerRot(player) {
+		// Player will move this far along the current direction vector
+		var moveStep = player.speed * player.moveSpeed;
+		// Add rotation if player is rotating (player.dir != 0)
+		player.rot += player.dir * player.rotSpeed;
+		// Calculate new player position with simple trigonomety
+		var newX = player.x + Math.cos(player.rot) * moveStep;
+		var newY = player.y + Math.sin(player.rot) * moveStep;
+	
+		if (this.isBlocking(newX, newY)) {	
+			return;
+		}
+
+		// Set new pos
+		player.moveRot(newX,newY);
+	}
+
+	// Game cycle with Rotation considered.
+	gameCycleRot() {		// Also the main frame to handle keydown event handling, such as chat box and movement of game
+		//wait for input
+		$("html").keydown( function(event) {
+			// Disable the default arrow scrolling 
+			if( event.which==37 || event.which==38 || event.which==39 || event.which==40 ) {
+				event.preventDefault();
+			}
+
+			/* console.log("keydown detected"); */
+			GAME.keyDownEventHandlerRot(event.which);
+			GAME.updateGameMap(); 
+		} );
+		$("html").keyup( function(event) {
+			// Disable the default arrow scrolling 
+			if( event.which==37 || event.which==38 || event.which==39 || event.which==40 ) {
+				event.preventDefault();
+			}
+
+			/* console.log("keyup detected"); */
+			GAME.keyUpEventHandlerRot(event.which);
+			GAME.updateGameMap(); 
+		} );
+
+		$("input").keypress( function(e) {
+			GAME.keyPressEventHandler(e.which);
+			if( e.which == 13 ) {		// if input was 'entered', clear input field
+				$(this).val('');
+			}
+		});
+
+		document.getElementById("chatHistoryButton").addEventListener("click", function() {
+			GAME.showChatHistory();
+		});
+	}
+
+	/* keyDownEventHandler(event) {
+		var player = this.whichPlayer();		// This is returned by reference by default of Javascript.
+
+		if( event == 37 || event == 38 || event == 39 || event == 40 ) {		// player movement event
+			console.log("keydown()")
+	
+			if( this.validMove( event, player.x, player.y ) ) {
+				this.movePlayer(event, player);
+				if( this.gameWon() ) {
+					console.log("Game Won");
+					this.promptPopup();
+				}
+			} else {
+				console.log("Invalid Move");
+			}
+		} else {
+			console.log("not sure what to say here");
+		}
+
+		return;
+	} */
+
+	// With Rotation considered.
+	keyDownEventHandlerRot(ewhich) {
+		var player = this.whichPlayer();
+
+		// Which key was pressed?
+		switch(ewhich) {
+			// Up, move palyer forward, ie. increase speed
+			case 38:
+				player.speed = 1; 
+				break;
+			// Down, move player backward, set neg speed
+			case 40:
+				player.speed = -1; 
+				break;
+			// Left, rotate player left
+			case 37:
+				player.dir = -1; 
+				break;
+			// Right, rotate player right
+			case 39:
+				player.dir = 1;
+				break;
+		}
+
+		this.movePlayerRot(player);
+	}
+
+	keyUpEventHandlerRot(ewhich) {
+		var player = this.whichPlayer();
+
+		// Which key was pressed?
+		switch(ewhich) {
+			case 38:
+			case 40:
+				player.speed = 0; 
+				break;
+			case 37:
+			case 39:
+				player.dir = 0; 
+				break;
+		}
+	}
+	/* End of */
 
 	movePlayer(event, player) { // @arg string, player&
 		//update player coor, no need to update map coor, since they are parsed separately
@@ -553,8 +718,6 @@ class game {
 		this.collectChat(event, player);
 	}
 
-
-
 	showChatHistory() {
 		console.log("showHistoryLog()");
 		this.chatBox.displayHistory();
@@ -601,6 +764,8 @@ var 	GG = false;
 
 /* Defining some global variables */
 
+// For testing 3d.
+//GAME.setBlankMap();
 
 /* MAIN() */
 $(document).ready(function() {
@@ -611,4 +776,5 @@ $(document).ready(function() {
 	GAME.displayPlayer();
 	GAME.drawGameMap(); 
 	GAME.gameCycle();		// In a sense loops while waiting for user input
+	//GAME.gameCycleRot();
 });
