@@ -8,6 +8,11 @@
  * Author: Yi Zong Kuang
  */
 
+/* 
+ * KNOWN BUGS
+ * - Map have have border wall otherwise, raycasting doens't render very well. 
+ */
+
 /* Trivial functions */
 // Returns a random number from 0 to max.
 function getRandomInt(max) {
@@ -839,6 +844,11 @@ class game {
 		}
 
 		this.movePlayerRot(player);
+
+		if( this.gameWonRot() ) {
+			console.log("Game Won");
+			this.promptPopup();
+		}
 	}
 
 	keyUpEventHandlerRot(ewhich) {
@@ -912,6 +922,16 @@ class game {
 			return true;
 		}
 
+		return false;
+	}
+
+	gameWonRot() {
+		var player = this.whichPlayer();
+		
+		if(Math.floor(player.x) == this.maze.exitx && Math.floor(player.y) == this.maze.exity) {
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -1052,7 +1072,7 @@ var 	GG = false;
 /* Defining some global variables */
 
 // For testing 3d.
-//GAME.setBlankMap();
+GAME.setBlankMap();
 //GAME.setMinimalMap();
 
 /* MAIN() */
