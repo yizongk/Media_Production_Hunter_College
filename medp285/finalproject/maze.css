@@ -104,6 +104,16 @@
     height: 20%;
 }
 
+
+
+#screen {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    overflow: hidden;
+    border: 2px solid #000;
+}
+
 #gameViewPort {
     border: 2px solid #000;
 }

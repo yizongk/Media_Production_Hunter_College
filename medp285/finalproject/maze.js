@@ -152,8 +152,8 @@ class maze_map {
 		this.wallVal = 1;
 		this.emptySpaceVal = 0;
 		this.exitVal = 2;
-		this.exitx = this.width - 1;
-		this.exity = this.height - 1;
+		this.exitx = this.width - 2;
+		this.exity = this.height - 2;
 		var i;
 		for( i = 0; i < MAP_DIMENSION_HEIGHT; ++i ) {
 			this.map[i] = new Array(this.width);
@@ -201,6 +201,28 @@ class maze_map {
 				}
 			}	
 		}
+	}
+
+	populateMinMap() {
+		for( var x = 0; x < this.width; ++x ) {
+			for( var y = 0; y < this.height; ++y ) {
+				if(x == this.exitx && y == this.exity) {
+					this.map[y][x] = 2;
+				} else if( x == 0 || y == 0 || x == this.width-1 || y == this.height-1 ) {
+					this.map[y][x] = 1;
+				}
+				else {
+				this.map[y][x] = 0;
+				}
+			}	
+		}
+		this.map[10][10] = 1;
+		this.map[10][11] = 1;
+		this.map[10][12] = 1;
+		this.map[10][13] = 1;
+		this.map[11][10] = 1;
+		this.map[12][10] = 1;
+		this.map[13][10] = 1;
 	}
 
 	elementMap() {
@@ -298,6 +320,24 @@ class game {
 		this.playerArr = new Array(MAX_PLAYER);
 		this.chatBox = new chatBox();
 		this.chatBuffer = "";
+
+		/* variable for raycasting */
+		this.screenWidth = 320;
+		this.screenHeight = 200;
+
+		this.stripWidth = 4;
+		this.fov = 60 * Math.PI / 180;
+
+		this.numRays = Math.ceil(this.screenWidth / this.stripWidth);
+		this.fovHalf = this.fov / 2;
+
+		this.viewDist = (this.screenWidth/2) / Math.tan((this.fov / 2));
+		this.twoPI = Math.PI * 2;
+		/* --- */		
+
+		/* variable for 3d rendering */
+		this.screenStrips = [];
+		this.numTextures = 4;
 	}
 
 	setPresetMap() {
@@ -306,6 +346,10 @@ class game {
 
 	setBlankMap() {
 		this.maze.populateBlankMap();
+	}
+
+	setMinimalMap() {
+		this.maze.populateMinMap();
 	}
 
 	getMapArr() {
@@ -360,7 +404,7 @@ class game {
 				var object_val = mapArr[y][x];
 
 				if(object_val==2) {
-					console.log(object_val);
+					/* console.log(object_val); */
 				}
 				
 				if( object_val == 1 ) {
@@ -402,16 +446,214 @@ class game {
 		mapObjs.width = mapObjs.width;
 
 		for( var i = 0; i < this.playerCount; ++i ) {
-			console.log("UPDATE RAN drawn player");
+			/* console.log("UPDATE RAN drawn player"); */
 			objCtx.fillStyle = "red";
 			objCtx.fillRect(	// draw a dot at the current player position
-				this.playerArr[i].x * this.getMapScale() + 4,
-				this.playerArr[i].y * this.getMapScale() + 4,
-				8, 8
+				this.playerArr[i].x * this.getMapScale() - 2,
+				this.playerArr[i].y * this.getMapScale() - 2,
+				4, 4
 			);
+
+			// draw that little line ahead of the player
+			objCtx.beginPath();
+			objCtx.moveTo(this.playerArr[i].x * this.getMapScale(), this.playerArr[i].y * this.getMapScale());
+			objCtx.lineTo(
+				(this.playerArr[i].x + Math.cos(this.playerArr[i].rot) * 4) * this.getMapScale(),
+				(this.playerArr[i].y + Math.sin(this.playerArr[i].rot) * 4) * this.getMapScale()
+			);
+			objCtx.closePath();
+			objCtx.stroke();
+
 		}
-		
+
 		return;
+	}
+
+	/* called once per game cycle, after the rest of the game logic */
+	castRays(player) {
+		var stripIdx = 0;
+		for(var i=0; i < this.numRays; ++i) {
+			// Where on the screen does ray go through?
+			var rayScreenPos = (-this.numRays/2 + i) * this.stripWidth;
+			
+			// The distance from the viewer to the point on the screen, simply Pythagoras.
+			var rayViewDist = Math.sqrt(rayScreenPos*rayScreenPos + this.viewDist*this.viewDist);
+		
+			// The angle of the ray, relative to the viewing direction
+			// Right trianble: a = sin(A) * c
+			var rayAngle = Math.asin(rayScreenPos/rayViewDist);
+
+			// Add the players viewing direction to get the angle in world space
+			this.castSingleRay(player, player.rot + rayAngle, stripIdx++);
+		}
+	}
+
+	castSingleRay(player, rayAngle, stripIdx) {
+		// Make sure the angle is between 0 and 360 degrees
+		rayAngle %= this.twoPI;
+		if( rayAngle < 0 ) {
+			rayAngle += this.twoPI;
+		}
+
+		// Moving right/left? up/down? Determined by which quadrant the angle is in
+		var right = (rayAngle > this.twoPI * 0.75 || rayAngle < this.twoPI * 0.25);
+		var up = (rayAngle < 0 || rayAngle > Math.PI);
+
+		var wallType = 0;
+
+		var angleSin = Math.sin(rayAngle);
+		var angleCos = Math.cos(rayAngle);
+		
+		// The distance to the block we hit
+		var dist = 0;
+		// The x and y coord of where the ray hit the block
+		var xHit = 0; 
+		var yHit = 0;
+		// The x-coord on the textture of the block, i.e. what part of the texture ar we going to render
+		var textureX;
+		// The (x,y) map coords of the block
+		var wallX; 
+		var wallY;
+
+		// First check against the vertical map/wall lines, we do this by moving to the right or left edge of the block we're standing in and then moving in 1 map unit steps horizontally. The amount we have to move vertically is determined by the slope of the ray, which is simply defined as sin(angle) / cos(angle).
+
+		// The slope of the staright line made by the ray
+		var slope = angleSin / angleCos;
+		// We move either 1 map unit to the left or right
+		var dX = right ? 1 : -1;
+		// How much to move up or down
+		var dY = dX * slope;
+
+		// Starting horizontal position, at one of the edges of the current map block
+		var x = right ? Math.ceil(player.x) : Math.floor(player.x);
+
+		// step we just made, multiplied by the slope
+		var y = player.y + (x - player.x) * slope;
+
+		while ( x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight() ) {
+
+			var wallX = Math.floor(x + (right ? 0 : -1));
+			var wallY = Math.floor(y);
+
+			// Is this point inside a wall block? OR EXIT!
+			if( this.maze.map[wallY][wallX] > 0 ) {
+				var distX = x - player.x;
+				var distY = y - player.y;
+				
+				// The distance from the player to this point, squared
+				dist = distX*distX + distY*distY;
+
+				wallType = this.maze.map[wallY][wallX];
+				textureX = y % 1;	// where exactly are we on the wall? textureX is the x coordinate on the texture that we'll use when texturing the wall.
+				if (!right) textureX = 1 - textureX; // if we're looking to the left side of the map, the texture should be reversed
+
+				// Save the coord of the hit. We only really use these to draw the rays on minimap
+				xHit = x;
+				yHit = y;
+				break;
+			}
+			x += dX;
+			y += dY;
+		}
+
+		// Horizontal run bascially same as vertical run
+		// the only difference here is that once we hit a map block, 
+		// we check if there we also found one in the earlier, vertical run. We'll know that if dist != 0.
+		// If so, we only register this hit if this distance is smaller.
+		var slope = angleCos / angleSin;
+		var dY = up ? -1 : 1;
+		var dX = dY * slope;
+		var y = up ? Math.floor(player.y) : Math.ceil(player.y);
+		var x = player.x + (y - player.y) * slope;
+
+		while (x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight()) {
+			var wallY = Math.floor(y + (up ? -1 : 0));
+			var wallX = Math.floor(x);
+			if (this.maze.map[wallY][wallX] > 0) {		// OR EXIT
+				var distX = x - player.x;
+				var distY = y - player.y;
+				var blockDist = distX*distX + distY*distY;
+				if (!dist || blockDist < dist) {
+					dist = blockDist;
+					xHit = x;
+					yHit = y;
+
+					wallType = this.maze.map[wallY][wallX];
+					textureX = x % 1;
+					if (up) textureX = 1 - textureX;
+				}
+				break;
+			}
+			x += dX;
+			y += dY;
+		}
+
+		if (dist) {
+			//this.drawRay(player, xHit, yHit);
+
+			var strip = this.screenStrips[stripIdx];
+
+			dist = Math.sqrt(dist);
+
+			// Use perpendicular distance to adjust for fish eye
+			// distorted_dist = correct_dist/cos(relative_angle_of_ray)
+			dist = dist*Math.cos(player.rot - rayAngle);
+
+			/*  Now calc the position, height and width of the wall strips "real" wall height
+			 *	in the game world is 1 unit, the distance from the player to the screen is viewDist,
+			 *  Thus the height on the screen is euqal to wall_height_real * viewDist/dist 
+			 */
+			var height = Math.round(this.viewDist/dist);			
+
+			 /*
+			  * Width is the same, but we have to stretch the texture to a factor of stripWidth
+			  * to make it fill the strip correctly. 
+			  */
+			var width = height * this.stripWidth;
+
+			/*
+			 * Top placement is easy since everthing is centered on the x-axis, so we simply move
+			 * it half way down the screen and then half the wall height back up. 
+			 */
+			var top = Math.round( (this.screenHeight - height) - 2 );
+
+			strip.style.height = height + 'px';
+			strip.style.top = top + 'px';
+
+			strip.img.style.height = Math.floor(height * this.numTextures) + 'px';
+			strip.img.style.width = Math.floor(width*2) + 'px';
+			strip.img.style.top = -Math.floor(height * (wallType-1)); + 'px';
+
+			var texX = Math.round(textureX*width);
+
+			/*
+			 * Make sure we don't move the textture too far to avoid gaps 
+			 */
+			if(texX > width - this.stripWidth) {
+				texX = width - this.stripWidth;
+			}
+
+			strip.img.style.left = -texX + 'px';
+		}
+
+	}
+
+	drawRay(player, rayX, rayY) {
+		var $ = function(id) { return document.getElementById(id); };
+
+		var miniMapObjects = $("mapObjects");
+		var objectCtx = miniMapObjects.getContext("2d");
+
+		objectCtx.strokeStyle = "rgba(0,100,0,0.3)";
+		objectCtx.lineWidth = 0.5;
+		objectCtx.beginPath();
+		objectCtx.moveTo(player.x * this.getMapScale(), player.y * this.getMapScale());
+		objectCtx.lineTo(
+			rayX * this.getMapScale(),
+			rayY * this.getMapScale()
+		);
+		objectCtx.closePath();
+		objectCtx.stroke();
 	}
 
 	addPlayer(player) {
@@ -423,7 +665,7 @@ class game {
 		}
 	}
 
-	displayPlayer() {
+	displayOnline() {
 		var currentContent = "";
 		var i;
 
@@ -474,6 +716,8 @@ class game {
 		if (y < 0 || y > this.maze.height-1 || x < 0 || x > this.maze.width-1)
 			return true;
 
+		var blank = this.maze.getEmptySpaceVal();
+		var exit = this.maze.getExitVal();
 		if( this.maze.map[Math.floor(y)][Math.floor(x)] == blank || this.maze.map[Math.floor(y)][Math.floor(x)] == exit ) {
 			return false;
 		}
@@ -489,6 +733,11 @@ class game {
 		var moveStep = player.speed * player.moveSpeed;
 		// Add rotation if player is rotating (player.dir != 0)
 		player.rot += player.dir * player.rotSpeed;
+
+		// make sure the angle is between 0 and 360 degrees
+		while (player.rot < 0) player.rot += this.twoPI;
+		while (player.rot >= this.twoPI) player.rot -= this.twoPI;
+
 		// Calculate new player position with simple trigonomety
 		var newX = player.x + Math.cos(player.rot) * moveStep;
 		var newY = player.y + Math.sin(player.rot) * moveStep;
@@ -513,6 +762,7 @@ class game {
 			/* console.log("keydown detected"); */
 			GAME.keyDownEventHandlerRot(event.which);
 			GAME.updateGameMap(); 
+			GAME.castRays(GAME.whichPlayer());
 		} );
 		$("html").keyup( function(event) {
 			// Disable the default arrow scrolling 
@@ -523,6 +773,7 @@ class game {
 			/* console.log("keyup detected"); */
 			GAME.keyUpEventHandlerRot(event.which);
 			GAME.updateGameMap(); 
+			GAME.castRays(GAME.whichPlayer());
 		} );
 
 		$("input").keypress( function(e) {
@@ -748,13 +999,45 @@ class game {
 		});
 	}
 	
+	initScreen() {
+		var $ = function(id) { return document.getElementById(id); };
+		var dc = function(tag) { return document.createElement(tag); };
+
+		var screen = $('screen');
+		for(var i=0; i < this.screenWidth; i+=this.stripWidth) {
+			var strip = dc('div');
+			strip.style.position = "absolute";
+			strip.style.left = i + "px";
+			strip.style.width = this.stripWidth+"px";
+			strip.style.height = "0px";
+			strip.style.overflow = "hidden";
+
+			strip.style.backgroundColor = "magenta";
+
+			var img = new Image();
+			img.src = (window.opera ? 'walls-19-colors.png' : 'walls.png');
+			img.style.position = "absolute";
+			img.style.left = "0px";
+
+			strip.appendChild(img);
+			strip.img = img;	// assign the image to a property on the strip element so we have easy access to the image later
+
+			this.screenStrips.push(strip);
+			screen.appendChild(strip);
+		}
+
+
+
+		
+	}
+
 }
 
 /* Global variables */
 var 	PLAYER_ID = 0;
 const 	MAX_PLAYER = 10;
-const 	PLAYER_INI_X = 0;
-const 	PLAYER_INI_Y = 0;
+const 	PLAYER_INI_X = 1;
+const 	PLAYER_INI_Y = 1;
 const 	MAP_DIMENSION_WIDTH = 35;
 const 	MAP_DIMENSION_HEIGHT = 40;
 const	MAP_SCALE = 13;
@@ -766,6 +1049,7 @@ var 	GG = false;
 
 // For testing 3d.
 //GAME.setBlankMap();
+GAME.setMinimalMap();
 
 /* MAIN() */
 $(document).ready(function() {
@@ -773,8 +1057,10 @@ $(document).ready(function() {
 	var p = new player("shuze",PLAYER_INI_X,PLAYER_INI_Y);
 	p.login();
 	GAME.addPlayer(p);
-	GAME.displayPlayer();
+	GAME.displayOnline();
+	GAME.initScreen();
 	GAME.drawGameMap(); 
-	GAME.gameCycle();		// In a sense loops while waiting for user input
-	//GAME.gameCycleRot();
+	//GAME.gameCycle();		// In a sense loops while waiting for user input
+	/* 3d implementation */
+	GAME.gameCycleRot();
 });
