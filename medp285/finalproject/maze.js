@@ -615,7 +615,7 @@ class game {
 			 * Top placement is easy since everthing is centered on the x-axis, so we simply move
 			 * it half way down the screen and then half the wall height back up. 
 			 */
-			var top = Math.round( (this.screenHeight - height) - 2 );
+			var top = Math.round( (this.screenHeight - height) / 2 );
 
 			strip.style.height = height + 'px';
 			strip.style.top = top + 'px';
