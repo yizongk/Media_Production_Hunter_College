@@ -175,9 +175,11 @@ class maze_map {
 			var gate = getRandomInt(MAP_DIMENSION_WIDTH); 
 			for( var y = 0; y < this.height; ++y ) {
 
-				if(x == this.exitx && y == this.exity) {
+				if(x == 0 || y == 0 || x == this.width-1 || y == this.height-1) {
+					this.map[y][x] = 1;
+				} else if(x == this.exitx && y == this.exity) {		
 					this.map[y][x] = 2;
-				} else if( x%2 == 0 ) {		// If even columns
+				} else if(x%2 == 1) {					// If odd columns
 					this.map[y][x] = 0;
 				} else {
 					if( y == gate ) {
@@ -196,8 +198,10 @@ class maze_map {
 			for( var y = 0; y < this.height; ++y ) {
 				if(x == this.exitx && y == this.exity) {
 					this.map[y][x] = 2;
+				} else if(x == 0 || y == 0 || x == this.width-1 || y == this.height-1) {
+					this.map[y][x] = 1;
 				} else {
-				this.map[y][x] = 0;
+					this.map[y][x] = 0;
 				}
 			}	
 		}
@@ -1049,7 +1053,7 @@ var 	GG = false;
 
 // For testing 3d.
 //GAME.setBlankMap();
-GAME.setMinimalMap();
+//GAME.setMinimalMap();
 
 /* MAIN() */
 $(document).ready(function() {
