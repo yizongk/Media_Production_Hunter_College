@@ -148,6 +148,7 @@ class maze_map {
 	 *  0 - empty space
 	 *  1 - wall
 	 *	2 - exit
+	 *  3 - grey wall
 	 */
 	constructor() {
 		this.width = MAP_DIMENSION_WIDTH;
@@ -155,6 +156,7 @@ class maze_map {
 		this.mapScale =   MAP_SCALE;
 		this.map = new Array(this.height);
 		this.wallVal = 1;
+		this.wall2Val = 3;
 		this.emptySpaceVal = 0;
 		this.exitVal = 2;
 		this.exitx = this.width - 2;
@@ -181,16 +183,16 @@ class maze_map {
 			for( var y = 0; y < this.height; ++y ) {
 
 				if(x == 0 || y == 0 || x == this.width-1 || y == this.height-1) {
-					this.map[y][x] = 1;
+					this.map[y][x] = this.wallVal;
 				} else if(x == this.exitx && y == this.exity) {		
-					this.map[y][x] = 2;
+					this.map[y][x] = this.exitVal;
 				} else if(x%2 == 1) {					// If odd columns
-					this.map[y][x] = 0;
+					this.map[y][x] = this.emptySpaceVal;
 				} else {
 					if( y == gate ) {
-						this.map[y][x] = 0;
+						this.map[y][x] = this.emptySpaceVal;
 					} else {
-						this.map[y][x] = 1;
+						this.map[y][x] = this.wallVal;
 					}
 				}
 
@@ -202,11 +204,11 @@ class maze_map {
 		for( var x = 0; x < this.width; ++x ) {
 			for( var y = 0; y < this.height; ++y ) {
 				if(x == this.exitx && y == this.exity) {
-					this.map[y][x] = 2;
+					this.map[y][x] = this.exitVal;
 				} else if(x == 0 || y == 0 || x == this.width-1 || y == this.height-1) {
-					this.map[y][x] = 1;
+					this.map[y][x] = this.wallVal;
 				} else {
-					this.map[y][x] = 0;
+					this.map[y][x] = this.emptySpaceVal;
 				}
 			}	
 		}
@@ -216,22 +218,38 @@ class maze_map {
 		for( var x = 0; x < this.width; ++x ) {
 			for( var y = 0; y < this.height; ++y ) {
 				if(x == this.exitx && y == this.exity) {
-					this.map[y][x] = 2;
+					this.map[y][x] = this.exitVal;
 				} else if( x == 0 || y == 0 || x == this.width-1 || y == this.height-1 ) {
-					this.map[y][x] = 1;
+					this.map[y][x] = this.wallVal;
 				}
 				else {
-				this.map[y][x] = 0;
+				this.map[y][x] = this.emptySpaceVal;
 				}
 			}	
 		}
-		this.map[10][10] = 1;
-		this.map[10][11] = 1;
-		this.map[10][12] = 1;
-		this.map[10][13] = 1;
-		this.map[11][10] = 1;
-		this.map[12][10] = 1;
-		this.map[13][10] = 1;
+		this.map[10][10] = this.wall2Val;
+		this.map[10][11] = this.wall2Val;
+		this.map[10][12] = this.wall2Val;
+		this.map[10][13] = this.wall2Val;
+		this.map[11][10] = this.wall2Val;
+		this.map[12][10] = this.wall2Val;
+		this.map[13][10] = this.wall2Val;
+
+		this.map[30][30] = this.wall2Val;
+		this.map[30][31] = this.wall2Val;
+		this.map[30][32] = this.wall2Val;
+		this.map[30][33] = this.wall2Val;
+		this.map[31][30] = this.wall2Val;
+		this.map[32][30] = this.wall2Val;
+		this.map[33][30] = this.wall2Val;
+
+		this.map[20][20] = this.wall2Val;
+		this.map[20][21] = this.wall2Val;
+		this.map[20][22] = this.wall2Val;
+		this.map[20][23] = this.wall2Val;
+		this.map[21][20] = this.wall2Val;
+		this.map[22][20] = this.wall2Val;
+		this.map[23][20] = this.wall2Val;
 	}
 
 	elementMap() {
@@ -331,8 +349,8 @@ class game {
 		this.chatBuffer = "";
 
 		/* variable for raycasting */
-		this.screenWidth = 320;
-		this.screenHeight = 200;
+		this.screenWidth = 1280;
+		this.screenHeight = 800;
 
 		this.stripWidth = 4;
 		this.fov = 60 * Math.PI / 180;
@@ -565,6 +583,8 @@ class game {
 			y += dY;
 		}
 
+
+
 		// Horizontal run bascially same as vertical run
 		// the only difference here is that once we hit a map block, 
 		// we check if there we also found one in the earlier, vertical run. We'll know that if dist != 0.
@@ -631,7 +651,7 @@ class game {
 
 			strip.img.style.height = Math.floor(height * this.numTextures) + 'px';
 			strip.img.style.width = Math.floor(width*2) + 'px';
-			strip.img.style.top = -Math.floor(height * (wallType-1)); + 'px';
+			strip.img.style.top = -Math.floor(height * (wallType-1)) + 'px';
 
 			var texX = Math.round(textureX*width);
 
@@ -1072,8 +1092,8 @@ var 	GG = false;
 /* Defining some global variables */
 
 // For testing 3d.
-GAME.setBlankMap();
-//GAME.setMinimalMap();
+//GAME.setBlankMap();
+GAME.setMinimalMap();
 
 /* MAIN() */
 $(document).ready(function() {
