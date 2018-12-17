@@ -1,5 +1,5 @@
 4. Revise previous assignment and make them look good with proper passage and image.
-7. Use Grid for CSS for ease of coding and imagining.
+7. Use Grid for CSS for ease of coding and imagining. --> NOPE used canvas please!
 
 
 
